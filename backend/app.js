@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 /** Utilisation d'helmet pour aider à sécuriser les en-têtes HTTP */
 const helmet = require("helmet");
-/** Importation des routes sauces et utilisateur */
+/** Importation des routes*/
 const postRoutes = require('./routes/Posts');
 const commentRoutes = require('./routes/Comments')
 const userRoutes = require('./routes/user');

@@ -1,15 +1,13 @@
 const DataTypes = require('sequelize');
-const db = require('../app');
+const db = require('../config/database');
  
 const Comment = db.define('Comment', {
-  id: {
-    type: DataTypes.INTEGER, 
-    autoIncrement: true, 
-    primaryKey: true
-  },
   text: {
     type: DataTypes.STRING,
     allowNull: false
+  },
+  imageUrl: {
+    type: DataTypes.STRING,
   }
 }, {
   freezeTableName: true

@@ -1,16 +1,15 @@
 const DataTypes = require('sequelize');
-const db = require('../app');
+const db = require('../config/database');
  
 const User = db.define('User', {
-  id: {
-    type: DataTypes.INTEGER, 
-    autoIncrement: true, 
-    primaryKey: true
-  },
   email: {
-    type: Sequelize.STRING(255), 
+    type: DataTypes.STRING(255), 
     allowNull: false, 
     unique: true
+  },
+  password: {
+    type: DataTypes.STRING(255), 
+    allowNull: false,
   },
   firstName: {
     type: DataTypes.STRING,
@@ -18,7 +17,14 @@ const User = db.define('User', {
   },
   lastName: {
     type: DataTypes.STRING
-  }
+  },
+  imageUrl: {
+    type: DataTypes.STRING,
+    allowNull:false
+  },
+  isAdmin: DataTypes.BOOLEAN,
+  allowNull: false,
+  defaultValue: false
 }, {
   freezeTableName: true
 })
