@@ -1,6 +1,7 @@
 const express = require('express');
 
 const path = require('path');
+const InitDB = require('./models/initdb');
 /** Utilisation d'helmet pour aider à sécuriser les en-têtes HTTP */
 const helmet = require("helmet");
 /** Importation des routes*/
@@ -10,7 +11,7 @@ const userRoutes = require('./routes/user');
 
 const app = express();
 
-app.use(express.json());
+
 
 /** CORS */
 app.use((req, res, next) => {
@@ -22,10 +23,13 @@ app.use((req, res, next) => {
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-app.use(helmet());
 
-app.use('/api/post', postRoutes);
-app.use('/api/comment', commentRoutes)
-app.use('/api/auth', userRoutes);
+InitDB().then(() => {
+  app.use(express.json());
+  app.use(helmet());
+  app.use('/api/post', postRoutes);
+  app.use('/api/comment', commentRoutes)
+  app.use('/api/auth', userRoutes);
+})
 
 module.exports = app;
