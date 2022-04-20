@@ -14,6 +14,7 @@ exports.createComment = (req, res, next) => {
     const comment = new comment({
       ...commentObject,
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+      text: req.body.text
     //   likes: 0,
     //   dislikes: 0,
     //   usersLiked: [],

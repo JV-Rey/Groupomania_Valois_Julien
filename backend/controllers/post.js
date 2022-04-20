@@ -1,4 +1,4 @@
-const Post = require('../models/Post');
+const post = require('../models/Post');
 const fs = require('fs');
 
 /** 
@@ -14,6 +14,8 @@ exports.createPost = (req, res, next) => {
     const post = new post({
       ...postObject,
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+      titre: req.body.titre,
+      text: req.body.text
     //   likes: 0,
     //   dislikes: 0,
     //   usersLiked: [],
@@ -76,7 +78,7 @@ exports.deletePost = (req, res, next) => {
 
 /** Renvoie un tableau de toutes les posts de la base de données. */
 exports.getAllPosts = (req, res, next) => {
-  post.find()
+  post.findAll()
   .then((posts) => {
     res.status(200).json(posts);
   }

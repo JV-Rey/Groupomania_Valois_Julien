@@ -12,9 +12,9 @@ let Init = async () => {
     } catch (error) {
         console.error('Unable to connect to the database:', error);
     }
-    await User.sync({force: true});
-    await Post.sync({force: true});
-    await Comment.sync({force: true});
+    await User.sync(/*{ force: true }*/);
+    await Post.sync(/*{ force: true }*/);
+    await Comment.sync(/*{ force: true }*/);
 }
 
 module.exports = Init;

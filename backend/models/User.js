@@ -20,11 +20,12 @@ const User = db.define('User', {
   },
   imageUrl: {
     type: DataTypes.STRING,
-    allowNull:false
   },
-  isAdmin: DataTypes.BOOLEAN,
-  allowNull: false,
-  defaultValue: false
+  isAdmin: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
 }, {
   freezeTableName: true
 })

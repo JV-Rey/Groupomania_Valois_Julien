@@ -23,14 +23,17 @@ schema
  * ajout de l'utilisateur à la base de données
  */
 exports.signup = (req, res, next) => {
-  if (!schema.validate(req.body.password)) {
+  /*if (!schema.validate(req.body.password)) {
     return res.status(400).json({error: "schema mot de passe non valide"})
-  }
+  }*/
   bcrypt.hash(req.body.password, 10)
   .then(hash => {
     const user = new User({
       email: req.body.email,
-      password: hash
+      password: hash,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      imageUrl: `${req.protocol}://${req.get("host")}/images/profile/avatardefault_92824.png`,
     });
     user.save()
     .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
