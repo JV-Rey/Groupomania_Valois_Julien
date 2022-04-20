@@ -1,4 +1,4 @@
-const post = require('../models/Post');
+const Post = require('../models/Post');
 const fs = require('fs');
 
 /** 
@@ -9,11 +9,10 @@ const fs = require('fs');
  * et les usersLiked et usersDisliked avec des tableaux vides.
  */
 exports.createPost = (req, res, next) => {
-    const postObject = JSON.parse(req.body.post);
-    delete postObject._id;
-    const post = new post({
-      ...postObject,
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+  if (req.body.imageUrl || req.body.text){
+
+    const post = new Post({
+      imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null,
       titre: req.body.titre,
       text: req.body.text
     //   likes: 0,
@@ -24,11 +23,12 @@ exports.createPost = (req, res, next) => {
     post.save()
     .then(() => res.status(201).json({ message: 'post enregistrée !'}))
     .catch(error => res.status(400).json({ error }));
+  }
 };
 
 /** Renvoie le post avec l’id fourni. */
 exports.getOnePost = (req, res, next) => {
-  post.findOne({_id: req.params.id})
+  Post.findOne({_id: req.params.id})
   .then((post) => {
     res.status(200).json(post);
   })
@@ -45,7 +45,7 @@ exports.getOnePost = (req, res, next) => {
  * Si aucun fichier n'est fourni, les informations sur le post se trouvent directement dans le corps de la requête
  * Si un fichier est fourni, le post transformée en chaîne de caractères se trouve dans req.body.post */
 exports.modifyPost = (req, res, next) => {
-  post.findOne({ _id: req.params.id })
+  Post.findOne({ _id: req.params.id })
   .then(post => {
     if (post.userId === req.token.userId){
       const postObject = req.file ?
@@ -62,15 +62,23 @@ exports.modifyPost = (req, res, next) => {
 
 /** Supprime le post avec l'id fourni. */
 exports.deletePost = (req, res, next) => {
-  post.findOne({ _id: req.params.id })
+  Post.findOne({ _id: req.params.id })
   .then(post => {
     if (post.userId === req.token.userId){
-      const filename = post.imageUrl.split('/images/')[1];
-      fs.unlink(`images/${filename}`, () => {
-        post.deleteOne({ _id: req.params.id })
+      console.log(req.params.id)
+      if (post.imageUrl){
+        const filename = post.imageUrl.split('/images/')[1];
+        
+        fs.unlink(`images/${filename}`, () => {
+          Post.deleteOne({ _id: req.params.id })
+          .then(() => res.status(200).json({ message: 'post supprimée !'}))
+          .catch(error => res.status(400).json({ error }));
+        });
+      }else{
+        Post.deleteOne({ _id: req.params.id })
         .then(() => res.status(200).json({ message: 'post supprimée !'}))
         .catch(error => res.status(400).json({ error }));
-      });
+      }
     }
    })
   .catch(error => res.status(500).json({ error }));
@@ -78,7 +86,7 @@ exports.deletePost = (req, res, next) => {
 
 /** Renvoie un tableau de toutes les posts de la base de données. */
 exports.getAllPosts = (req, res, next) => {
-  post.findAll()
+  Post.findAll()
   .then((posts) => {
     res.status(200).json(posts);
   }
