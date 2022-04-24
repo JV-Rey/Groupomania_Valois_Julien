@@ -48,12 +48,13 @@ exports.modifyPost = (req, res, next) => {
   Post.findOne({ _id: req.params.id })
   .then(post => {
     if (post.userId === req.token.userId){
-      const postObject = req.file ?
-        {
-          ...JSON.parse(req.body.post),
-          imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-        } : { ...req.body };
-      post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id })
+      post.update(
+        {titre: req.body.titre,
+          text: req.body.text,
+          imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null,
+        },
+        {where: req.params.postId}
+      )
       .then(() => res.status(200).json({ message: 'post modifiée !'}))
       .catch(error => res.status(400).json({ error }));
     };
