@@ -1,4 +1,4 @@
-const comment = require('../models/Comment');
+const Comment = require('../models/Comment');
 const fs = require('fs');
 
 /** 
@@ -9,11 +9,9 @@ const fs = require('fs');
  * et les usersLiked et usersDisliked avec des tableaux vides.
  */
 exports.createComment = (req, res, next) => {
-    const commentObject = JSON.parse(req.body.comment);
-    delete commentObject._id;
-    const comment = new comment({
-      ...commentObject,
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+  if (req.body.imageUrl || req.body.text){
+    const comment = new Comment({
+      imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null,
       text: req.body.text
     //   likes: 0,
     //   dislikes: 0,
@@ -23,11 +21,12 @@ exports.createComment = (req, res, next) => {
     comment.save()
     .then(() => res.status(201).json({ message: 'comment enregistrée !'}))
     .catch(error => res.status(400).json({ error }));
+  }
 };
 
 /** Renvoie le commentaire avec l’id fourni. */
 exports.getOneComment = (req, res, next) => {
-  comment.findOne({_id: req.params.id})
+  Comment.findOne({_id: req.params.id})
   .then((comment) => {
     res.status(200).json(comment);
   })
@@ -44,15 +43,15 @@ exports.getOneComment = (req, res, next) => {
  * Si aucun fichier n'est fourni, les informations sur le comment se trouvent directement dans le corps de la requête
  * Si un fichier est fourni, le comment transformée en chaîne de caractères se trouve dans req.body.comment */
 exports.modifyComment = (req, res, next) => {
-  comment.findOne({ _id: req.params.id })
+  Comment.findOne({ _id: req.params.id })
   .then(comment => {
     if (comment.userId === req.token.userId){
-      const commentObject = req.file ?
-        {
-          ...JSON.parse(req.body.comment),
-          imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-        } : { ...req.body };
-      comment.updateOne({ _id: req.params.id }, { ...commentObject, _id: req.params.id })
+      comment.update(
+        { text: req.body.text,
+          imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null,
+        },
+        {where: req.params.postId}
+      )
       .then(() => res.status(200).json({ message: 'comment modifiée !'}))
       .catch(error => res.status(400).json({ error }));
     };
@@ -61,7 +60,7 @@ exports.modifyComment = (req, res, next) => {
 
 /** Supprime le comment avec l'id fourni. */
 exports.deleteComment = (req, res, next) => {
-  comment.findOne({ _id: req.params.id })
+  Comment.findOne({ _id: req.params.id })
   .then(comment => {
     if (comment.userId === req.token.userId){
       const filename = comment.imageUrl.split('/images/')[1];
@@ -77,7 +76,7 @@ exports.deleteComment = (req, res, next) => {
 
 /** Renvoie un tableau de tous les commentaires de la base de données. */
 exports.getAllComments = (req, res, next) => {
-  comment.find()
+  Comment.findAll()
   .then((comments) => {
     res.status(200).json(comments);
   }
