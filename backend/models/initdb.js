@@ -12,6 +12,11 @@ let Init = async () => {
     } catch (error) {
         console.error('Unable to connect to the database:', error);
     }
+    User.hasMany(Post);
+    Post.hasMany(Comment);
+    Post.hasOne(User);
+    Comment.hasOne(User);
+    
     await User.sync(/*{ force: true }*/);
     await Post.sync(/*{ force: true }*/);
     await Comment.sync(/*{ force: true }*/);

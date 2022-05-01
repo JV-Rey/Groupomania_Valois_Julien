@@ -12,6 +12,7 @@ exports.createPost = (req, res, next) => {
   if (req.body.imageUrl || req.body.text){
 
     const post = new Post({
+      postId: req.body.id,
       imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null,
       titre: req.body.titre,
       text: req.body.text
@@ -28,7 +29,7 @@ exports.createPost = (req, res, next) => {
 
 /** Renvoie le post avec l’id fourni. */
 exports.getOnePost = (req, res, next) => {
-  Post.findOne({_id: req.params.id})
+  Post.findOne({postId: req.params.id})
   .then((post) => {
     res.status(200).json(post);
   })
@@ -45,7 +46,7 @@ exports.getOnePost = (req, res, next) => {
  * Si aucun fichier n'est fourni, les informations sur le post se trouvent directement dans le corps de la requête
  * Si un fichier est fourni, le post transformée en chaîne de caractères se trouve dans req.body.post */
 exports.modifyPost = (req, res, next) => {
-  Post.findOne({ _id: req.params.id })
+  Post.findOne({ postId: req.params.id })
   .then(post => {
     if (post.userId === req.token.userId){
       post.update(
@@ -63,7 +64,7 @@ exports.modifyPost = (req, res, next) => {
 
 /** Supprime le post avec l'id fourni. */
 exports.deletePost = (req, res, next) => {
-  Post.findOne({ _id: req.params.id })
+  Post.findOne({ postId: req.params.id })
   .then(post => {
     if (post.userId === req.token.userId){
       console.log(req.params.id)
@@ -76,7 +77,7 @@ exports.deletePost = (req, res, next) => {
           .catch(error => res.status(400).json({ error }));
         });
       }else{
-        Post.deleteOne({ _id: req.params.id })
+        Post.deleteOne({ id: req.params.id })
         .then(() => res.status(200).json({ message: 'post supprimée !'}))
         .catch(error => res.status(400).json({ error }));
       }
