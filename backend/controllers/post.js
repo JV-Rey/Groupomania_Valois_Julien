@@ -13,6 +13,7 @@ exports.createPost = (req, res, next) => {
 
     const post = new Post({
       postId: req.body.id,
+    //  userId: req.body.userId,
       imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null,
       titre: req.body.titre,
       text: req.body.text

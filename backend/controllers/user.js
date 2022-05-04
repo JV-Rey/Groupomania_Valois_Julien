@@ -71,3 +71,57 @@ exports.login = (req, res, next) => {
     })
   .catch(error => res.status(500).json({ error }));
 }; 
+
+exports.deleteUser = (req, res, next) => {
+  User.findOne({ where: { id: req.params.id }})  
+    .then(user => {
+      user.deleteOne({ _id: req.params.id })
+      .then(() => res.status(200).json({ message: 'Compte supprimé' }))
+      .catch(error => res.status(400).json({ error }));
+    })
+  .catch (error => res.status(500).json({ error }));
+};
+
+exports.getOneUser = (req, res, next) => {
+  User.findOne({ where: { id: req.params.id }})
+    .then((user) => {
+      res.status(200).json(user);
+    })
+    .catch((error) => {
+      res.status(404).json({
+        error: error
+    });
+  });
+};
+
+
+exports.modifyUser = (req, res, next) => { 
+  User.findOne({ where: { id: req.params.id }})
+    .then((user) => {
+      if (user.userId === req.token.userId){
+        user.update({
+          email: req.body.email,
+          password: hash,
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null, 
+        },
+        {where: req.params.userId}
+      )
+      .then(() => res.status(200).json({ message: 'Information(s) de votre compte modifiée(s) !'}))
+      .catch(error => res.status(400).json({ error }));
+    };
+  })
+}
+
+exports.getAllUsers = (req, res, next) => {
+  User.findAll()
+  .then((users) => {
+    res.status(200).json(users);
+  }
+  ).catch((error) => {
+    res.status(400).json({
+      error: error
+    });
+  });
+};

@@ -12,22 +12,14 @@ let Init = async () => {
     } catch (error) {
         console.error('Unable to connect to the database:', error);
     }
-    User.hasMany(Post, { as: 'posts' });
-    Post.belongsTo(User, {
-        foreignKey: 'userId',
-        as: 'user'});
-    User.hasMany(Comment, { as: 'comments' });
-    Comment.belongsTo(User, {
-        foreignKey: 'userId',
-        as: 'user'});
-    Post.hasMany(Comment, { as: 'comments' });
-    Comment.belongsTo(Post, { as: 'posts' });
     
-
+    Post.hasMany(Comment);
+    Post.belongsTo(User, {onDelete: 'CASCADE'});    
+    Comment.belongsTo(User, {onDelete: 'CASCADE'}); 
     
-    await User.sync({ force: true });
-    await Post.sync({ force: true });
-    await Comment.sync({ force: true });
+    await User.sync({/* force: true */});
+    await Post.sync({/* force: true */});
+    await Comment.sync({/* force: true */});
 }
 
 module.exports = Init;
