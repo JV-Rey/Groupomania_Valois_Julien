@@ -75,9 +75,11 @@ exports.login = (req, res, next) => {
 exports.deleteUser = (req, res, next) => {
   User.findOne({ where: { id: req.params.id }})  
     .then(user => {
-      user.deleteOne({ _id: req.params.id })
-      .then(() => res.status(200).json({ message: 'Compte supprimé' }))
-      .catch(error => res.status(400).json({ error }));
+      if (user.id === req.token.userId){
+        user.destroy({ id: req.params.id })
+        .then(() => res.status(200).json({ message: 'Compte supprimé' }))
+        .catch(error => res.status(400).json({ error }));
+      }
     })
   .catch (error => res.status(500).json({ error }));
 };
@@ -98,20 +100,24 @@ exports.getOneUser = (req, res, next) => {
 exports.modifyUser = (req, res, next) => { 
   User.findOne({ where: { id: req.params.id }})
     .then((user) => {
-      if (user.userId === req.token.userId){
-        user.update({
-          email: req.body.email,
-          password: hash,
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
-          imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null, 
-        },
-        {where: req.params.userId}
-      )
-      .then(() => res.status(200).json({ message: 'Information(s) de votre compte modifiée(s) !'}))
-      .catch(error => res.status(400).json({ error }));
-    };
+      if (user.id === req.token.userId){
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(req.body.password, salt);        
+          user.update({
+            email: req.body.email,
+            password: hash,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null, 
+          },
+          {where: req.params.userId})
+          .then(() => res.status(200).json({ message: 'Information(s) de votre compte modifiée(s) !'}))
+          .catch(error => res.status(400).json({ error }));        
+      }else{
+        res.status(403).json({ message: 'unauthorized request' });
+      };    
   })
+  .catch(error => res.status(500).json({ message: error.message }));
 }
 
 exports.getAllUsers = (req, res, next) => {
