@@ -10,7 +10,6 @@ const fs = require('fs');
  */
 exports.createPost = (req, res, next) => {
   if (req.body.imageUrl || req.body.text){
-
     const post = new Post({
       postId: req.body.id,
     //  userId: req.body.userId,
@@ -49,7 +48,8 @@ exports.getOnePost = (req, res, next) => {
 exports.modifyPost = (req, res, next) => {
   Post.findOne({ postId: req.params.id })
   .then(post => {
-    if (post.userId === req.token.userId){
+    console.log(req.params.id);
+    if (post.userId === req.token.userId || req.token.isAdmin){      
       post.update(
         {titre: req.body.titre,
           text: req.body.text,
@@ -67,18 +67,16 @@ exports.modifyPost = (req, res, next) => {
 exports.deletePost = (req, res, next) => {
   Post.findOne({ postId: req.params.id })
   .then(post => {
-    if (post.userId === req.token.userId){
-      console.log(req.params.id)
+    if (post.userId === req.token.userId || req.token.isAdmin){
       if (post.imageUrl){
-        const filename = post.imageUrl.split('/images/')[1];
-        
+        const filename = post.imageUrl.split('/images/')[1];        
         fs.unlink(`images/${filename}`, () => {
-          Post.deleteOne({ _id: req.params.id })
+          Post.destroy({ _id: req.params.id })
           .then(() => res.status(200).json({ message: 'post supprimée !'}))
           .catch(error => res.status(400).json({ error }));
         });
       }else{
-        Post.deleteOne({ id: req.params.id })
+        Post.destroy({ id: req.params.id })
         .then(() => res.status(200).json({ message: 'post supprimée !'}))
         .catch(error => res.status(400).json({ error }));
       }

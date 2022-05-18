@@ -45,7 +45,7 @@ exports.getOneComment = (req, res, next) => {
 exports.modifyComment = (req, res, next) => {
   Comment.findOne({ _id: req.params.id })
   .then(comment => {
-    if (comment.userId === req.token.userId){
+    if (comment.userId === req.token.userId || req.token.isAdmin){
       comment.update(
         { text: req.body.text,
           imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null,
@@ -62,10 +62,10 @@ exports.modifyComment = (req, res, next) => {
 exports.deleteComment = (req, res, next) => {
   Comment.findOne({ _id: req.params.id })
   .then(comment => {
-    if (comment.userId === req.token.userId){
+    if (comment.userId === req.token.userId || req.token.isAdmin){
       const filename = comment.imageUrl.split('/images/')[1];
       fs.unlink(`images/${filename}`, () => {
-        comment.deleteOne({ _id: req.params.id })
+        comment.destroy({ _id: req.params.id })
         .then(() => res.status(200).json({ message: 'comment supprimée !'}))
         .catch(error => res.status(400).json({ error }));
       });
