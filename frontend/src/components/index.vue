@@ -9,11 +9,11 @@ defineProps({
 
 <template>
   <div class="greetings">
-    <h1 class="green">{{ msg }}</h1>
+    <h1 class="red">{{ msg }}</h1>
     <h3>
       Vous êtes sur le site interne de Groupomania vous pouvez vous
-      <a target="_blank" href="../render/signup.vue">inscrire</a> ou vous
-      <a target="_blank" href="/login">connecter</a>.
+      <a href="../signup.vue">inscrire</a> ou vous
+      <a href="/login">connecter</a>.
     </h3>
   </div>
 </template>

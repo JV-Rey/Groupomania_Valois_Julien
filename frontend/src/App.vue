@@ -37,15 +37,15 @@ header {
 }
 
 a,
-.green {
+.red {
   text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
+  color: rgb(243, 0, 0);
   transition: 0.4s;
 }
 
 @media (hover: hover) {
   a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+    background-color: hsla(4, 100%, 95%, 0.644);
   }
 }
 

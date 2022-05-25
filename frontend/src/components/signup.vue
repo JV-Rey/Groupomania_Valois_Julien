@@ -1,4 +1,5 @@
 <template>
+  <h3>Remplicez ces informations pour vous inscrire à Groupomania</h3>
   <form alt="formulaire d'inscription à Groupomania">
     <div>
       <label for="firstName">Votre prénom :
@@ -20,4 +21,5 @@
       <button type="submit">Créer un compte</button>
     </div>
   </form>
+  <p>Vous avez déja un compte? <a href="/login">Connectez</a>-vous!</p>
 </template>
