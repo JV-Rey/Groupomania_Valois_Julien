@@ -9,8 +9,9 @@ const fs = require('fs');
  * et les usersLiked et usersDisliked avec des tableaux vides.
  */
 exports.createComment = (req, res, next) => {
-  if (req.body.imageUrl || req.body.text){
+  if (req.file || req.body.text){
     const comment = new Comment({
+      userId: req.token.userId,
       imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null,
       text: req.body.text
     //   likes: 0,
@@ -26,7 +27,7 @@ exports.createComment = (req, res, next) => {
 
 /** Renvoie le commentaire avec l’id fourni. */
 exports.getOneComment = (req, res, next) => {
-  Comment.findOne({_id: req.params.id})
+  Comment.findOne({ where:{id: req.params.id }})
   .then((comment) => {
     res.status(200).json(comment);
   })
@@ -43,14 +44,13 @@ exports.getOneComment = (req, res, next) => {
  * Si aucun fichier n'est fourni, les informations sur le comment se trouvent directement dans le corps de la requête
  * Si un fichier est fourni, le comment transformée en chaîne de caractères se trouve dans req.body.comment */
 exports.modifyComment = (req, res, next) => {
-  Comment.findOne({ _id: req.params.id })
+  Comment.findOne({ where:{id: req.params.id }})
   .then(comment => {
     if (comment.userId === req.token.userId || req.token.isAdmin){
       comment.update(
         { text: req.body.text,
           imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null,
-        },
-        {where: req.params.postId}
+        }
       )
       .then(() => res.status(200).json({ message: 'comment modifiée !'}))
       .catch(error => res.status(400).json({ error }));
@@ -60,15 +60,21 @@ exports.modifyComment = (req, res, next) => {
 
 /** Supprime le comment avec l'id fourni. */
 exports.deleteComment = (req, res, next) => {
-  Comment.findOne({ _id: req.params.id })
-  .then(comment => {
+  Comment.findOne({ where:{id: req.params.id }})
+  .then(comment => {    
     if (comment.userId === req.token.userId || req.token.isAdmin){
-      const filename = comment.imageUrl.split('/images/')[1];
-      fs.unlink(`images/${filename}`, () => {
-        comment.destroy({ _id: req.params.id })
+      if (comment.imageUrl){
+        const filename = comment.imageUrl.split('/images/')[1];        
+        fs.unlink(`images/${filename}`, () => {
+          comment.destroy()
+          .then(() => res.status(200).json({ message: 'comment supprimée !'}))
+          .catch(error => res.status(400).json({ error }));
+        });
+      }else{
+        comment.destroy()
         .then(() => res.status(200).json({ message: 'comment supprimée !'}))
         .catch(error => res.status(400).json({ error }));
-      });
+      }
     }
    })
   .catch(error => res.status(500).json({ error }));

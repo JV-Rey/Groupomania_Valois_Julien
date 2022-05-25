@@ -9,10 +9,9 @@ const fs = require('fs');
  * et les usersLiked et usersDisliked avec des tableaux vides.
  */
 exports.createPost = (req, res, next) => {
-  if (req.body.imageUrl || req.body.text){
+  if ((req.file || req.body.text) && req.body.titre){
     const post = new Post({
-      postId: req.body.id,
-    //  userId: req.body.userId,
+      userId: req.token.userId,
       imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null,
       titre: req.body.titre,
       text: req.body.text
@@ -29,7 +28,7 @@ exports.createPost = (req, res, next) => {
 
 /** Renvoie le post avec l’id fourni. */
 exports.getOnePost = (req, res, next) => {
-  Post.findOne({postId: req.params.id})
+  Post.findOne({ where:{id: req.params.id }})
   .then((post) => {
     res.status(200).json(post);
   })
@@ -46,16 +45,14 @@ exports.getOnePost = (req, res, next) => {
  * Si aucun fichier n'est fourni, les informations sur le post se trouvent directement dans le corps de la requête
  * Si un fichier est fourni, le post transformée en chaîne de caractères se trouve dans req.body.post */
 exports.modifyPost = (req, res, next) => {
-  Post.findOne({ postId: req.params.id })
+  Post.findOne({ where:{id: req.params.id }})
   .then(post => {
-    console.log(req.params.id);
     if (post.userId === req.token.userId || req.token.isAdmin){      
       post.update(
         {titre: req.body.titre,
           text: req.body.text,
           imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null,
-        },
-        {where: req.params.postId}
+        }
       )
       .then(() => res.status(200).json({ message: 'post modifiée !'}))
       .catch(error => res.status(400).json({ error }));
@@ -65,18 +62,18 @@ exports.modifyPost = (req, res, next) => {
 
 /** Supprime le post avec l'id fourni. */
 exports.deletePost = (req, res, next) => {
-  Post.findOne({ postId: req.params.id })
-  .then(post => {
+  Post.findOne({ where:{id: req.params.id }})
+  .then(post => {    
     if (post.userId === req.token.userId || req.token.isAdmin){
       if (post.imageUrl){
         const filename = post.imageUrl.split('/images/')[1];        
         fs.unlink(`images/${filename}`, () => {
-          Post.destroy({ _id: req.params.id })
+          post.destroy()
           .then(() => res.status(200).json({ message: 'post supprimée !'}))
           .catch(error => res.status(400).json({ error }));
         });
       }else{
-        Post.destroy({ id: req.params.id })
+        post.destroy()
         .then(() => res.status(200).json({ message: 'post supprimée !'}))
         .catch(error => res.status(400).json({ error }));
       }
