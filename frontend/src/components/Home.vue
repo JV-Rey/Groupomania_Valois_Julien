@@ -1,18 +1,9 @@
-<script setup>
-defineProps({
-  msg: {
-    type: String,
-    required: true
-  }
-})
-</script>
-
 <template>
   <div class="greetings">
-    <h1 class="red">{{ msg }}</h1>
+    <h1 class="red">{{  }}</h1>
     <h3>
       Vous êtes sur le site interne de Groupomania vous pouvez vous
-      <a href="../signup.vue">inscrire</a> ou vous
+      <a href="/signup">inscrire</a> ou vous
       <a href="/login">connecter</a>.
     </h3>
   </div>
