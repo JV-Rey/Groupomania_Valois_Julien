@@ -23,3 +23,18 @@
   </form>
   <p>Vous avez déja un compte? <a href="/login">Connectez</a>-vous!</p>
 </template>
+
+<script>
+  export default {
+    name: 'SignUp',
+    data(){
+      return{
+        firstName:"",
+        lastName:"",
+        email:"",
+        password:""
+      }
+    }
+
+  }
+</script>
