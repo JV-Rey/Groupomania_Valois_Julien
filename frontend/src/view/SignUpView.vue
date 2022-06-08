@@ -1,6 +1,6 @@
 <template>
   <h3>Remplicez ces informations pour vous inscrire à Groupomania</h3>
-  <form @submit.prevent="SignUpView" alt="formulaire d'inscription à Groupomania">
+  <form @submit.prevent="signUp" alt="formulaire d'inscription à Groupomania">
     <div>
       <label for="firstName">Votre prénom :
         <input type="text" id="firstName" v-model="firstName" placeholder="Mon prénom - ex : Jean" alt="renseigner votre prénom">
@@ -18,7 +18,7 @@
         <input type="password" id="password" v-model="password" placeholder="Mon mot de passe* - ex : dupontpass!" alt="choisir votre mot de passe">
       </label>
 
-      <button type="submit">Créer un compte</button>
+      <button>Créer un compte</button>
     </div>
   </form>
   <p>Vous avez déja un compte? <a href="/login">Connectez</a>-vous!</p>
@@ -42,7 +42,15 @@ import axios from 'axios'
     
     methods: {
       signUp(){
-        axios.post('http://localhost:3000/api/user', this.formData)
+        /*const configHeaders = {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }*/
+        axios.defaults.headers = {'Content-Type': 'application/json'}
+        axios.post('http://localhost:3000/api/auth/signup', 
+        this.formData,
+       
+        )
         .then((res) => console.log(res))
         .catch((err) => console.log(err))
       }
