@@ -1,6 +1,6 @@
 <template>
   <h3>Connection:</h3>
-  <form @submit.prevent="onSubmit" alt="formulaire de connection à Groupomania">
+  <form @submit.prevent="login" alt="formulaire de connection à Groupomania">
     <div>
       <label for="email">Votre adresse mail :
         <input type="text" id="email" required v-model="email" placeholder="ex : dupont@groupomania.fr" alt="renseigner votre email">
@@ -10,7 +10,7 @@
         <input type="password" id="password" required v-model="password" placeholder="ex : dupontpass!" alt="choisir votre mot de passe">
       </label>
 
-      <button type="submit">Connection</button>
+      <button>Connection</button>
     </div>
   </form>
   <p>Si vous n'avez pas de compte, vous pouvez en <a href="/signup">créer</a> un!</p>
@@ -21,19 +21,20 @@
     name: 'loginView',
     data(){
       return{
+        formData: {
         email:"",
         password:"",
         id:""
-      }
+        }}
     },
     methods: {
       login(){
         const options = {
           method: "POST",
-          body: JSON.stringify(
-            this.email,
+          body: JSON.stringify(this.formData
+            /*this.email,
             this.password,
-            this.id),
+            this.id*/),
           headers: {
             'Content-type' : 'application/json'
           }
