@@ -1,34 +1,41 @@
 <template>
-  <div class="greetings">
-    <h1 class="red">{{  }}</h1>
-    <h3>
-      Vous êtes sur le site interne de Groupomania vous pouvez vous
-      <a href="/signup">inscrire</a> ou vous
-      <a href="/login">connecter</a>.
-    </h3>
-  </div>
+  <section>
+    <h1>Bienvenu sur Groupomania!</h1>
+    <article class="article">
+      <div class="post">
+        <h2 class="margin">{{post.titre}}</h2>
+        <p class="margin">{{post.text}}</p>
+        <img class="post-image" src="{{post.image}}">
+      </div>
+    </article>
+  </section>
 </template>
 
-<style scoped>
-h1 {
-  font-weight: 500;
-  font-size: 2.6rem;
-  top: -10px;
-}
-
-h3 {
-  font-size: 1.2rem;
-}
-
-.greetings h1,
-.greetings h3 {
-  text-align: center;
-}
-
-@media (min-width: 1024px) {
-  .greetings h1,
-  .greetings h3 {
-    text-align: left;
+<script>
+  export default {
+    name: 'homeView',
+    methods: {
+      getAllPosts(){
+        let token = sessionStorage.getItem('token');
+        const options = {
+          method: "GET",
+          headers: {
+            'Content-type' : 'application/json',
+            'Authorization' : 'Bearer ' + token
+          }
+        }
+        fetch('http://localhost:3000/api/post', options)
+        .then(res => res.json())
+        .then(token => this.getAllPosts(token))
+        /*let elt = document.getElementsByClassName('article') 
+        let elt2 = document.getElementsByClassName('post') 
+        .then( posts => {
+          for (const post of posts) {
+              elt2.innerHTML += elt.innerHTML;
+          }
+        })*/
+        .catch(error => console.log(error))
+      }      
+    }
   }
-}
-</style>
+</script>
