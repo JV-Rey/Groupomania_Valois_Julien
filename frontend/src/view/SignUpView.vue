@@ -2,25 +2,26 @@
   <img src="../assets/icon-left-font.svg" alt="Logo Groupomania">
   <h3>Remplicez ces informations pour vous inscrire à Groupomania.</h3>
   <form @submit.prevent="signUp" alt="formulaire d'inscription à Groupomania">
-    <div>
-      <label for="firstName">Votre prénom :
-        <input type="text" id="firstName" v-model="firstName" placeholder="ex : Jean" alt="renseigner votre prénom">
-      </label>
+      <div class="form-group">
+        <label for="firstName">Votre prénom :</label>      
+        <input type="text" class="form-control" id="firstName" v-model="user.firstName" placeholder="ex : Jean" alt="renseigner votre prénom">
+      </div>
 
-      <label for="lastName">Votre nom :
-        <input type="text" id="lastName" v-model="lastName"  placeholder="ex : Dupont" alt="renseigner votre nom">
-      </label>
+      <div class="form-group">
+        <label for="lastName">Votre nom :</label>
+        <input type="text" id="lastName" v-model="user.lastName"  placeholder="ex : Dupont" alt="renseigner votre nom">
+      </div>
 
-      <label for="email">Votre adresse mail :
-        <input type="text" id="email" v-model="email" placeholder="ex : dupont@groupomania.fr" alt="renseigner votre email">
-      </label>
+      <div class="form-group">
+        <label for="email">Votre adresse mail :</label>
+        <input type="text" id="email" v-model="user.email" placeholder="ex : dupont@groupomania.fr" alt="renseigner votre email">
+      </div>
 
-      <label for="password">Votre mot de passe : 
-        <input type="password" id="password" v-model="password" placeholder="ex : dupontpass!" alt="choisir votre mot de passe">
-      </label>
-
-      <button>Créer un compte</button>
-    </div>
+     <div class="form-group">
+        <label for="password">Votre mot de passe :</label>
+        <input type="password" id="password" v-model="user.password" placeholder="ex : dupontpass!" alt="choisir votre mot de passe">
+      </div>
+    <button>Créer un compte</button>
   </form>
   <p>Vous avez déja un compte? <a href="/login">Connectez</a>-vous!</p>
 </template>
@@ -30,7 +31,7 @@
     name: 'SignUpView',
     data(){
       return{
-        formData: {
+        user: {
           firstName:"",
           lastName:"",
           email:"",
@@ -42,11 +43,7 @@
       signUp(){
         const options = {
           method: "POST",
-          body: JSON.stringify(this.formData
-          /*this.firstName, 
-          this.lastName, 
-          this.email, 
-          this.password*/),
+          body: JSON.stringify(this.user),
           headers: {
             'Content-type' : 'application/json'
           }
@@ -54,7 +51,6 @@
         fetch("http://localhost:3000/api/auth/signup", options)
         .then(res => res.json())
         .catch(error => console.log(error))
-        console.log(options);
       }
     },
   }
