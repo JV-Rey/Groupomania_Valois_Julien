@@ -1,6 +1,6 @@
 <template>
     <h3>Vous pouvez créé et publié un post.</h3>
-  <form @submit.prevent="createPost" alt="formulaire d'inscription à Groupomania">
+  <form @submit.prevent="createPost" alt="formulaire de création de post">
       <div class="form-group">
         <label for="titre">Titre :</label>      
         <input type="text" class="form-control" id="titre" v-model="post.titre" placeholder="ex : Titre du post" alt="renseigner le titre de votre post">
@@ -13,7 +13,7 @@
 
       <div class="form-group flex">
         <label for="image">Image(optionel) :</label>
-        <input type="text" id="image" v-model="post.image"  placeholder="ex : https//groupomania.fr/image" alt="renseigner votre nom">
+        <input type="text" id="image" v-model="post.imageUrl"  placeholder="ex : https//groupomania.fr/image" alt="ajouter une image">
         <input type="file">
       </div>
 
@@ -29,23 +29,26 @@
         post: {
           titre:"",
           text:"",
-          image:"",
+          imageUrl:"",
         }
       }
     },    
     methods: {
       createPost(){
+        let token = sessionStorage.getItem('token');
         const options = {
           method: "POST",
           body: JSON.stringify(this.post),
           headers: {
-            'Content-type' : 'application/json'
+            'Content-type' : 'application/json',
+            'Authorization' : 'Bearer ' + token
           }
         }
         fetch("http://localhost:3000/api/post", options)
         .then(res => res.json())
+        .then(data => this.post = data)
         .catch(error => console.log(error))
-      }
+      }     
     },
   }
 </script>

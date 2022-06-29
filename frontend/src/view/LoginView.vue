@@ -53,8 +53,15 @@
 <style>
   img{
     width: 200px;
-  }
+  };
+
     h3{
     color: #FD2D01;
-}
+  };
+
+  .form-group {
+      display: flex;
+      justify-content: center;
+      padding: 1.5rem;
+  };
 </style>
