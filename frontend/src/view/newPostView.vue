@@ -14,7 +14,7 @@
       <div class="form-group flex">
         <label for="image">Image(optionel) :</label>
         <input type="text" id="image" v-model="post.imageUrl"  placeholder="ex : https//groupomania.fr/image" alt="ajouter une image">
-        <input type="file">
+        <input type="file" v-on:change="fileChange">
       </div>
 
     <button>Créer un post</button>
@@ -34,6 +34,23 @@
       }
     },    
     methods: {
+       onFileChange(e) {
+      var files = e.target.files || e.dataTransfer.files;
+      if (!files.length)
+        return;
+      this.createImage(files[0]);
+    },
+    createImage(file) {
+      var imageUrl = new imageUrl();
+      var reader = new FileReader();
+      var vm = this;
+
+      reader.onload = (e) => {
+        vm.image = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    },
+ 
       createPost(){
         let token = sessionStorage.getItem('token');
         const options = {
