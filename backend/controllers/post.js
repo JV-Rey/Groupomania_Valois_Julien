@@ -1,4 +1,6 @@
 const Post = require('../models/Post');
+const Comment = require('../models/Comment')
+const User = require('../models/User')
 const fs = require('fs');
 
 /** 
@@ -28,7 +30,11 @@ exports.createPost = (req, res, next) => {
 
 /** Renvoie le post avec l’id fourni. */
 exports.getOnePost = (req, res, next) => {
-  Post.findOne({ where:{id: req.params.id }})
+  Post.findByPk(req.params.id, 
+    {include: [
+      {model: User, attributes: ["firstName", "lastName"] },
+      {model: Comment, include: [{model: User, attributes: ["firstName", "lastName"] }] }
+    ]})
   .then((post) => {
     res.status(200).json(post);
   })
@@ -84,7 +90,12 @@ exports.deletePost = (req, res, next) => {
 
 /** Renvoie un tableau de toutes les posts de la base de données. */
 exports.getAllPosts = (req, res, next) => {
-  Post.findAll()
+  Post.findAll({
+    include: [
+      {model: User, attributes: ["firstName", "lastName"] },
+      {model: Comment, include: [{model: User, attributes: ["firstName", "lastName"] }] }
+    ]
+  })
   .then((posts) => {
     res.status(200).json(posts);
   }

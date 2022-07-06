@@ -1,9 +1,14 @@
 <template>
     <article class="article">
-      <div class="comment">
-        <p class="margin">{{comment.text}}</p>
-        <img class="comment-image" src="{{comment.imageUrl}}">
-      </div>
+        <div class="author">
+            <p>{{user.firstName + user.lastName}}</p>
+            <p>Créé le {{comment.createdAt}}</p>
+            <p>modifié le {{comment.uptatedAt}}</p>
+        </div>
+        <div class="comment">
+            <p class="margin">{{comment.text}}</p>
+            <img class="comment-image" src="{{comment.imageUrl}}">
+        </div>
     </article>
 </template>
 
@@ -21,8 +26,8 @@
 
 <style>
     .comment{
-        background-color: #F2F2F2;
-        border: 1px solid red;
+        background-color: #FFD7D7;
+        border: 1px solid #FD2D01;
         border-radius: 20px;
     }
 

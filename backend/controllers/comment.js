@@ -1,5 +1,8 @@
-const Comment = require('../models/Comment');
+const Post = require('../models/Post');
+const Comment = require('../models/Comment')
+const User = require('../models/User')
 const fs = require('fs');
+const { create } = require('domain');
 
 /** 
  * Capture et enregistre l'image
@@ -9,25 +12,29 @@ const fs = require('fs');
  * et les usersLiked et usersDisliked avec des tableaux vides.
  */
 exports.createComment = (req, res, next) => {
-  if (req.file || req.body.text){
-    const comment = new Comment({
+  if (req.body.text){
+    Comment.create({
       userId: req.token.userId,
-      imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null,
-      text: req.body.text
+      text: req.body.text,
+      postId:req.body.postId
     //   likes: 0,
     //   dislikes: 0,
     //   usersLiked: [],
     //   usersDisliked: []
-    });
-    comment.save()
+    })
     .then(() => res.status(201).json({ message: 'comment enregistrée !'}))
     .catch(error => res.status(400).json({ error }));
+  }else{
+    res.status(400).json('Un commentaire est necessaire')
   }
 };
 
 /** Renvoie le commentaire avec l’id fourni. */
 exports.getOneComment = (req, res, next) => {
-  Comment.findOne({ where:{id: req.params.id }})
+  Comment.findByPk(req.params.id, 
+    {include: [
+      {model: User, attributes: ["firstName", "lastName"] },
+    ]})
   .then((comment) => {
     res.status(200).json(comment);
   })
@@ -82,7 +89,10 @@ exports.deleteComment = (req, res, next) => {
 
 /** Renvoie un tableau de tous les commentaires de la base de données. */
 exports.getAllComments = (req, res, next) => {
-  Comment.findAll()
+  Comment.findAll({
+  include: [
+    {model: User, attributes: ["firstName", "lastName"] },
+  ]})
   .then((comments) => {
     res.status(200).json(comments);
   }

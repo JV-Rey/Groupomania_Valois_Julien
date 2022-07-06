@@ -1,20 +1,17 @@
 <template>
   <Header></Header>
   <Post v-for="post in posts" :key="post.id" :post="post"></Post>
-  <Comment v-for="comment in comments" :key="comment.id" :comment="comment"></Comment>
 </template>
 
 <script>
   import Header from "../components/Header.vue";
   import Post from "@/components/Post.vue";
-  import Comment from "../components/Comment.vue";
 
   export default {
     name: 'homeView',
     components: {
     Header,
-    Post,
-    Comment
+    Post
   },
     data(){
       return {
