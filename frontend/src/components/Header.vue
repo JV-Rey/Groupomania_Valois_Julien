@@ -1,13 +1,13 @@
 <template>
-    <div>
+    <div class="header">
         <img src="../assets/icon-left-font.svg" alt="Logo Groupomania">
-        <a href="/">Acceuil</a>
-        <a href="/newpost">Creer un post</a>
-        <a href="/signup">Déconnection</a>
+        <div class="nav-margin-top">
+            <a href="/" class="nav">Acceuil</a>
+            <a href="/newpost" class="nav">Creer un post</a>
+            <a href="/signup" class="nav">Déconnection</a>
+        </div>
     </div>
-    <div>
-        <h1>Bienvenu sur Groupomania!</h1>
-    </div>
+    <h1>Bienvenu sur Groupomania!</h1>
 </template>
 
 <script>
@@ -16,8 +16,27 @@
     }
 </script>
 
-<style>
+<style scoped>
+    .header{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .nav{
+        margin: 20px;
+        color: #FD2D01;
+    }
+
+    .nav-margin-top{
+        margin-top: 50px;
+    }
+
     img{
         width: 200px;
     };
+
+    h1{
+        color: #FD2D01;
+        margin-top: 20px;
+    }
 </style>
