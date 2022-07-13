@@ -6,9 +6,6 @@ const Comment = db.define('comment', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  imageUrl: {
-    type: DataTypes.STRING,
-  }
 }, {
   freezeTableName: true
 })

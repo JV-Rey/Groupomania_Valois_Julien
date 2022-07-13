@@ -1,13 +1,12 @@
 <template>
     <article class="article">
         <div class="author">
-            <p>{{user.firstName + user.lastName}}</p>
+            <p>{{comment.user.firstName + comment.user.lastName}}</p>
             <p>Créé le {{comment.createdAt}}</p>
             <p>modifié le {{comment.uptatedAt}}</p>
         </div>
         <div class="comment">
             <p class="margin">{{comment.text}}</p>
-            <img class="comment-image" src="{{comment.imageUrl}}">
         </div>
     </article>
 </template>

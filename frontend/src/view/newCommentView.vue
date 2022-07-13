@@ -10,12 +10,18 @@
 </template>
 
 <script>
-    export default {
+    import { useRoute } from 'vue-router'
+    export default {      
     name: 'newCommentView',
+    setup() {
+      const route = useRoute();
+      console.log(route.params.id);
+    },
     data(){
       return{
         comment: {
           text:"",
+          postId: this.$route.params.id,
         }
       }
     },    

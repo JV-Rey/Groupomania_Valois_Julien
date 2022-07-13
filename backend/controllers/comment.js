@@ -1,8 +1,6 @@
 const Post = require('../models/Post');
 const Comment = require('../models/Comment')
 const User = require('../models/User')
-const fs = require('fs');
-const { create } = require('domain');
 
 /** 
  * Capture et enregistre l'image
@@ -55,10 +53,8 @@ exports.modifyComment = (req, res, next) => {
   .then(comment => {
     if (comment.userId === req.token.userId || req.token.isAdmin){
       comment.update(
-        { text: req.body.text,
-          imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null,
-        }
-      )
+        { text: req.body.text 
+      })
       .then(() => res.status(200).json({ message: 'comment modifiée !'}))
       .catch(error => res.status(400).json({ error }));
     };
@@ -70,19 +66,10 @@ exports.deleteComment = (req, res, next) => {
   Comment.findOne({ where:{id: req.params.id }})
   .then(comment => {    
     if (comment.userId === req.token.userId || req.token.isAdmin){
-      if (comment.imageUrl){
-        const filename = comment.imageUrl.split('/images/')[1];        
-        fs.unlink(`images/${filename}`, () => {
-          comment.destroy()
-          .then(() => res.status(200).json({ message: 'comment supprimée !'}))
-          .catch(error => res.status(400).json({ error }));
-        });
-      }else{
         comment.destroy()
         .then(() => res.status(200).json({ message: 'comment supprimée !'}))
         .catch(error => res.status(400).json({ error }));
-      }
-    }
+      }    
    })
   .catch(error => res.status(500).json({ error }));
 };
