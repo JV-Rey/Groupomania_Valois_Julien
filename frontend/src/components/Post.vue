@@ -2,7 +2,7 @@
   <section>
     <article class="article">
       <div class="author">
-        <p>{{user.firstName + user.lastName}}</p>
+        <p>{{post.user.firstName + post.user.lastName}}</p>
         <p>Créé le {{post.createdAt}}</p>
         <p>modifié le {{post.uptatedAt}}</p>
       </div>
@@ -11,9 +11,9 @@
         <p class="margin">{{post.text}}</p>
         <img class="post-image" src="{{post.imageUrl}}">
       </div>
-        <Comment v-for="comment in comments" :key="comment.id" :comment="comment"></Comment>
+        <Comment v-for="comment in comments" :key="comment.post.id" :comment="comment"></Comment>
       <div>
-        <a href="/newComment">Ajoutez un commentaire</a>
+        <router-link :to="'/newComment/' + post.id">Ajoutez un commentaire</router-link>
       </div>
     </article>
   </section>
@@ -37,6 +37,7 @@ import Comment from './Comment.vue';
     .article{
         word-wrap: break-word;
         padding: 3% 20%;        
+        background-color: #4E5166;
     }
 
     .post{
