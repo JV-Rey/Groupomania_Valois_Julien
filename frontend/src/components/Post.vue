@@ -11,7 +11,7 @@
         <p class="margin">{{post.text}}</p>
         <img class="post-image" src="{{post.imageUrl}}">
       </div>
-        <Comment v-for="comment in comments" :key="comment.post.id" :comment="comment"></Comment>
+        <Comment v-for="comment in post.comments" :key="comment.id" :comment="comment"></Comment>
       <div>
         <router-link :to="'/newComment/' + post.id">Ajoutez un commentaire</router-link>
       </div>
