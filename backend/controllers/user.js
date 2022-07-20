@@ -109,7 +109,7 @@ exports.modifyUser = (req, res, next) => {
             //password: hash,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
-            imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null, 
+            imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/profile/${req.file.filename}`: null, 
           })
           .then(() => res.status(200).json({ message: 'Information(s) de votre compte modifiée(s) !'}))
           .catch(error => res.status(400).json({ error }));        

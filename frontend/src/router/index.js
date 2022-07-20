@@ -29,6 +29,12 @@ const routes = [
         path: '/newcomment/:id',
         name: 'newcomment',
         component: () => import('@/view/newCommentView.vue')
+    },
+
+    {
+        path: '/profile/:id',
+        name: 'profile',
+        component: () => import('@/view/ProfileView.vue')
     }
 ]
 

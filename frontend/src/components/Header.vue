@@ -4,6 +4,7 @@
         <div class="nav-margin-top">
             <a href="/" class="nav">Acceuil</a>
             <a href="/newpost" class="nav">Creer un post</a>
+            <!-- <router-link :to="'/profile/' + user.id">Ajoutez un commentaire</router-link> -->
             <a href="/signup" class="nav">Déconnection</a>
         </div>
     </div>
