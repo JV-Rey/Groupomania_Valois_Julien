@@ -12,18 +12,21 @@
         <label for="image">Voulez vous changer votre image de profile? :</label>
         <input type="file" name="image" id="image" accept="image/*" alt="changer votre image de profile">
     <button>Modifier les informations de votre profile.</button>
-    <button>Supprimer votre compte.</button>
+    <button @click="deleteUser()">Supprimer votre compte.</button>   
     </form>
+    <Users  v-for="user in users" :key="user.id" :user="user"></Users>
 
 </template>
 
 <script>
     import Header from "../components/Header.vue";
+    import Users from "../components/Users.vue";
 
     export default {
         name: 'homeView',
         components: {
-        Header,
+            Header,
+            Users
         },
         data() {
             return {
@@ -37,41 +40,41 @@
             }
         },
         methods: {
-        getOneUser(){
-            let token = sessionStorage.getItem('token');
-            const options = {
-                method: "GET",
-                headers: {
-                    'Content-type' : 'application/json',
-                    'Authorization' : 'Bearer ' + token
+            getOneUser(){
+                let token = sessionStorage.getItem('token');
+                const options = {
+                    method: "GET",
+                    headers: {
+                        'Content-type' : 'application/json',
+                        'Authorization' : 'Bearer ' + token
+                    }
                 }
-            }
-        fetch('http://localhost:3000/api/user', options)
-        .then(res => res.json())
-        .then(data => this.user = data)
-        .catch(error => console.log(error))
-        console.log(this.user);
-      },
-        modifProfile(){
-            let token = sessionStorage.getItem('token');
-            let input = document.getElementById('image')
-            let formData = new FormData();
-            formData.append('email', this.email)
-            formData.append('password', this.password)
-            formData.append('image', input.files[0])
-            const options = {
-                method: "PUT",
-                body: formData,
-                headers: {
-                    //'Content-Type': 'multipart/form-data',
-                    'Authorization' : 'Bearer ' + token
-                }
-            }
-            fetch("http://localhost:3000/api/user", options)
+            fetch('http://localhost:3000/api/user', options)
             .then(res => res.json())
             .then(data => this.user = data)
             .catch(error => console.log(error))
-            }, 
+            console.log(this.user);
+            },
+            modifProfile(){
+                let token = sessionStorage.getItem('token');
+                let input = document.getElementById('image')
+                let formData = new FormData();
+                formData.append('email', this.email)
+                formData.append('password', this.password)
+                formData.append('image', input.files[0])
+                const options = {
+                    method: "PUT",
+                    body: formData,
+                    headers: {
+                        //'Content-Type': 'multipart/form-data',
+                        'Authorization' : 'Bearer ' + token
+                    }
+                }
+                fetch("http://localhost:3000/api/user", options)
+                .then(res => res.json())
+                .then(data => this.user = data)
+                .catch(error => console.log(error))
+                }, 
             deleteUser(){
                 let token = sessionStorage.getItem('token');
                 const options = {
@@ -83,7 +86,7 @@
                 }
             fetch("http://localhost:3000/api/user", options)
             .then(res => res.json())
-            .then(data => this.user = data)
+            .then(sessionStorage.clear())
             .catch(error => console.log(error))
             }
         },
