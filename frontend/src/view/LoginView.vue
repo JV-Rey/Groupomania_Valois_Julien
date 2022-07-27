@@ -43,6 +43,12 @@
           if (data.token){
             sessionStorage.setItem('token', data.token);
           }
+          if (data.userId && data.isAdmin){
+            sessionStorage.setItem('userInfo', JSON.stringify({
+              userId: data.userId,
+              isAdmin: data.isAdmin
+            }))
+          }
           return data.token;
         })      
       }      

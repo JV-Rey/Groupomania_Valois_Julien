@@ -4,8 +4,8 @@
         <div class="nav-margin-top">
             <a href="/" class="nav">Acceuil</a>
             <a href="/newpost" class="nav">Creer un post</a>
-            <!-- <router-link :to="'/profile/' + user.id">Ajoutez un commentaire</router-link> -->
-            <a href="/signup" class="nav">Déconnection</a>
+            <router-link :to="'/profile/' + userInfo.userId" class="nav">Votre profile</router-link>
+            <a href="/login" class="nav">Déconnection</a>
         </div>
     </div>
     <h1>Bienvenu sur Groupomania!</h1>
@@ -13,7 +13,12 @@
 
 <script>
     export default{
-        name:'headerComp'
+        name:'headerComp',
+        data() {
+            return {
+                userInfo: JSON.parse(sessionStorage.getItem('userInfo'))
+            }
+        },
     }
 </script>
 
