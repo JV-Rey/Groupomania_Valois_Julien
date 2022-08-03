@@ -13,11 +13,11 @@ const Post = db.define('post', {
     type: DataTypes.STRING,
   },
   like:{
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     allowNull: false
   },
   dislike:{
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     allowNull: false
   }
 }, {
