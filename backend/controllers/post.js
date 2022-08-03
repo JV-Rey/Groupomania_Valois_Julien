@@ -51,7 +51,7 @@ exports.getOnePost = (req, res, next) => {
  * Si aucun fichier n'est fourni, les informations sur le post se trouvent directement dans le corps de la requête
  * Si un fichier est fourni, le post transformée en chaîne de caractères se trouve dans req.body.post */
 exports.modifyPost = (req, res, next) => {
-  Post.findOne({ where:{id: req.params.id }})
+  Post.findByPk({ where:{id: req.params.id }})
   .then(post => {
     if (post.userId === req.token.userId || req.token.isAdmin){      
       post.update(
@@ -68,7 +68,7 @@ exports.modifyPost = (req, res, next) => {
 
 /** Supprime le post avec l'id fourni. */
 exports.deletePost = (req, res, next) => {
-  Post.findOne({ where:{id: req.params.id }})
+  Post.findByPk({ where:{id: req.params.id }})
   .then(post => {    
     if (post.userId === req.token.userId || req.token.isAdmin){
       if (post.imageUrl){
@@ -114,8 +114,8 @@ exports.getAllPosts = (req, res, next) => {
  * L'ID de l'utilisateur doit être ajouté ou retiré du tableau approprié
  * Le nombre total de « Like » et de « Dislike » est mis à jour à chaque nouvelle notation
  */
-/*exports.getLikesDislikes = (req, res, next) => {
-  post.findOne({ _id: req.params.id })
+exports.getLikesDislikes = (req, res, next) => {
+  Post.findByPk({ _id: req.params.id })
   .then((post) => {
     const userID = req.token.userId;
     const like = req.body.like;
@@ -158,4 +158,4 @@ exports.getAllPosts = (req, res, next) => {
     .catch(error => res.status(400).json({ error }))
   })
   .catch((error) => res.status(400).json({ error }));
-};*/
+};

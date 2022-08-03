@@ -49,11 +49,13 @@ exports.signup = (req, res, next) => {
  * renvoie l'id de l'utilisateur depuis la base de données et un token web JSON signé
  */
 exports.login = (req, res, next) => {
-  User.findOne({ email: req.body.email })
+  User.findByPk({ where: {email: req.body.email }})
     .then(user => {
       if (!user) {
         return res.status(401).json({ error: 'Utilisateur non trouvé !' });
       }
+      console.log(req.body);
+      console.log(user);
       bcrypt.compare(req.body.password, user.password)
         .then(valid => {
           if (!valid) {
@@ -75,7 +77,7 @@ exports.login = (req, res, next) => {
 }; 
 
 exports.deleteUser = (req, res, next) => {
-  User.findOne({ where: { id: req.params.id }})  
+  User.findByPk({ where: { id: req.params.id }})  
     .then(user => {
       if (user.id === req.token.userId || req.token.isAdmin){
         user.destroy({ id: req.params.id })
@@ -87,7 +89,7 @@ exports.deleteUser = (req, res, next) => {
 };
 
 exports.getOneUser = (req, res, next) => {
-  User.findOne({ where: { id: req.params.id }})
+  User.findByPk({ where: { id: req.params.id }})
     .then((user) => {
       res.status(200).json(user);
     })
@@ -99,7 +101,7 @@ exports.getOneUser = (req, res, next) => {
 };
 
 exports.modifyUser = (req, res, next) => { 
-  User.findOne({ where: { id: req.params.id }})
+  User.findByPk({ where: { id: req.params.id }})
     .then((user) => {
       if (user.id === req.token.userId){
         //const salt = bcrypt.genSaltSync(10);

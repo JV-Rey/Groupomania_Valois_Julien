@@ -49,7 +49,7 @@ exports.getOneComment = (req, res, next) => {
  * Si aucun fichier n'est fourni, les informations sur le comment se trouvent directement dans le corps de la requête
  * Si un fichier est fourni, le comment transformée en chaîne de caractères se trouve dans req.body.comment */
 exports.modifyComment = (req, res, next) => {
-  Comment.findOne({ where:{id: req.params.id }})
+  Comment.findByPk({ where:{id: req.params.id }})
   .then(comment => {
     if (comment.userId === req.token.userId || req.token.isAdmin){
       comment.update(
@@ -63,7 +63,7 @@ exports.modifyComment = (req, res, next) => {
 
 /** Supprime le comment avec l'id fourni. */
 exports.deleteComment = (req, res, next) => {
-  Comment.findOne({ where:{id: req.params.id }})
+  Comment.findByPk({ where:{id: req.params.id }})
   .then(comment => {    
     if (comment.userId === req.token.userId || req.token.isAdmin){
         comment.destroy()
