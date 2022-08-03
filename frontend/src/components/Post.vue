@@ -10,6 +10,8 @@
         <h2 class="margin">{{post.titre}}</h2>
         <p class="margin">{{post.text}}</p>
         <img class="post-image" :src="post.imageUrl">
+        <p>J'aime({{post.like}})   Je n'aime pas({{post.dislike}})</p>
+        <p v-if="post.userId === userInfo.userId || userInfo.isAdmin" @click="deletePost(e)">Supprimer ce post</p>
       </div>
         <Comment v-for="comment in post.comments" :key="comment.id" :comment="comment"></Comment>
       <div>
