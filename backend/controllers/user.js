@@ -49,7 +49,7 @@ exports.signup = (req, res, next) => {
  * renvoie l'id de l'utilisateur depuis la base de données et un token web JSON signé
  */
 exports.login = (req, res, next) => {
-  User.findByPk({ where: {email: req.body.email }})
+  User.findOne({ where: {email: req.body.email }})
     .then(user => {
       if (!user) {
         return res.status(401).json({ error: 'Utilisateur non trouvé !' });
@@ -71,9 +71,9 @@ exports.login = (req, res, next) => {
             { expiresIn: '24h' })
           });
         })
-      .catch(error => res.status(500).json({ error }));
+      .catch(error => res.status(500).json({message: `bcrypt ! ${ error }`}));
     })
-  .catch(error => res.status(500).json({ error }));
+  .catch(error => res.status(500).json({message: `error find ! ${ error }`}));
 }; 
 
 exports.deleteUser = (req, res, next) => {
