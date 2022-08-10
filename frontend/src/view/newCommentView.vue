@@ -1,7 +1,8 @@
 <template>
+  <Header></Header>
     <h3>Vous pouvez publié un commentaire.</h3>
     <form @submit.prevent="createComment" alt="formulaire de création de commentaire">
-      <div class="form-group">
+      <div>
         <label for="text">Text :</label>
         <textarea id="text" name="Comment" rows="4" cols="50" v-model="comment.text" placeholder="ex : Text de votre commentaire" alt="renseigner le text de votre commentaire"></textarea> 
       </div>
@@ -10,9 +11,14 @@
 </template>
 
 <script>
+  import Header from "../components/Header.vue";
+
     import { useRoute } from 'vue-router'
     export default {      
     name: 'newCommentView',
+    components: {
+      Header
+    },
     setup() {
       const route = useRoute();
       console.log(route.params.id);
@@ -49,5 +55,18 @@
   .flex{
     display: flex;
     flex-direction: column;
+  }
+
+  form{
+    width: 50%;
+    margin: 20px 25%;
+  }
+
+  label{
+    margin: 20px;
+  }
+
+  button{
+    margin: 20px;
   }
 </style>

@@ -11,7 +11,8 @@
         <p class="margin">{{post.text}}</p>
         <img class="post-image" :src="post.imageUrl">
         <p>J'aime({{post.like}})   Je n'aime pas({{post.dislike}})</p>
-        <p v-if="post.userId === userInfo.userId || userInfo.isAdmin" @click="deletePost(e)">Supprimer ce post</p>
+        <button v-if="post.userId === userInfo.userId || userInfo.isAdmin">Modifié votre post</button>
+        <button v-if="post.userId === userInfo.userId || userInfo.isAdmin" @click="deletePost(e)">Supprimer ce post</button>
       </div>
         <Comment v-for="comment in post.comments" :key="comment.id" :comment="comment"></Comment>
       <div>
@@ -31,6 +32,11 @@ import Comment from './Comment.vue';
             required: true
         }
     },
+    data() {
+      return {
+        userInfo: JSON.parse(sessionStorage.getItem('userInfo'))
+      }
+    },
     components: { Comment }
 };
 </script>
@@ -39,13 +45,15 @@ import Comment from './Comment.vue';
     .article{
         word-wrap: break-word;
         padding: 3% 20%;        
-        background-color: #4E5166;
+        background-color: #FFD7D7;
     }
 
     .post{
         background-color: #FFD7D7;
-        border: 1px solid #FD2D01;
+        border: 10px solid #FD2D01;
         border-radius: 20px;
+        box-shadow: 20px 5px 20px #4E5166;
+        margin-bottom: 40px;
     }
 
     .margin{

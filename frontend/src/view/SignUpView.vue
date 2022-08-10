@@ -59,5 +59,23 @@
 <style>
   img{
     width: 200px;
-    height: 200px;
-}</style>
+  }
+
+    h3{
+    color: #FD2D01;
+  }
+
+  .form-group {
+      display: flex;
+      justify-content: center;
+      padding: 1.5rem;
+  }
+
+  label{
+    margin: 0px 20px;
+  }
+
+  button{
+    margin: 20px;
+  }
+</style>

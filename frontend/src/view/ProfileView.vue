@@ -5,10 +5,10 @@
 
     <form @submit.prevent="modifProfile()" class="flex" alt="formulaire de modifacation de profile">
         <label for="email">Votre email est {{actualUser.email}}, voulez-vous la changer?</label>
-        <input type="text" name="email" id="email"  placeholder="ex : dupont@groupomania.fr" alt="renseigner votre nouvel email">
+        <input type="text" name="email" id="email" v-model="actualUser.email" placeholder="ex : dupont@groupomania.fr" alt="renseigner votre nouvel email">
         
         <label for="password">Voulez-vous changer votre mot de passe?</label>
-        <input type="password" name="password" id="password"  placeholder="ex : dupontpass!" alt="renseigner votre nouveau mot de passe">
+        <input type="password" name="password" id="password" v-model="actualUser.password" placeholder="ex : dupontpass!" alt="renseigner votre nouveau mot de passe">
         
         <label for="image">Voulez vous changer votre image de profile? :</label>
         <input type="file" name="image" id="image" accept="image/*" alt="changer votre image de profile">
@@ -26,7 +26,7 @@
     import Users from "../components/Users.vue";
 
     export default {
-        name: 'homeView',
+        name: 'profileView',
         components: {
             Header,
             Users
@@ -41,7 +41,7 @@
                     imageUrl:''
                 }, 
                 userInfo: JSON.parse(sessionStorage.getItem('userInfo')),
-                users: []            
+                users: []        
             }
         },
         created() {
