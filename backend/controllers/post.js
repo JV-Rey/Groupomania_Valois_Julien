@@ -2,6 +2,7 @@ const Post = require('../models/Post');
 const Comment = require('../models/Comment')
 const User = require('../models/User')
 const fs = require('fs');
+const Like = require('../models/postLikes')
 
 /** 
  * Capture et enregistre l'image
@@ -17,10 +18,6 @@ exports.createPost = (req, res, next) => {
       imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null,
       titre: req.body.titre,
       text: req.body.text
-    //   likes: 0,
-    //   dislikes: 0,
-    //   usersLiked: [],
-    //   usersDisliked: []
     });
     post.save()
     .then(() => res.status(201).json({ message: 'post enregistrée !'}))
@@ -115,35 +112,26 @@ exports.getAllPosts = (req, res, next) => {
  * Le nombre total de « Like » et de « Dislike » est mis à jour à chaque nouvelle notation
  */
 exports.getLikesDislikes = (req, res, next) => {
-  Post.findByPk({ _id: req.params.id })
-  .then((post) => {
-    const userID = req.token.userId;
-    const like = req.body.like;
-    switch (like) {
+  Like.findOne({where: { postId: req.params.id, userId: req.token.userId }})
+  .then((like) => {
+    switch (likeType) {
       case 0:
-        if (post.usersLiked.includes(userID)){
-          post.usersLiked = post.usersLiked.filter(user => user != userID);
-        }
-        if (post.usersDisliked.includes(userID)){
-          post.usersDisliked = post.usersDisliked.filter(user => user != userID);
-        }
+        
         break;
 
-      case 1:
-        if (!post.usersLiked.includes(userID)){
-          post.usersLiked.push(userID);            
-        }
-        if (post.usersDisliked.includes(userID)){
-          post.usersDisliked = post.usersDisliked.filter(user => user != userID);
-        }
-        break;
-
+        
       case -1:
-        if (!post.usersDisliked.includes(userID)){
-          post.usersDisliked.push(userID);
-          }
-        if (post.usersLiked.includes(userID)){
-          post.usersLiked = post.usersLiked.filter(user => user != userID);
+      case 1:
+        if (!like) {
+          Like.create({
+            likeType: req.body.likeType,
+            userId: req.token.userId,
+            postId: req.params.id
+          })
+          .then(() => res.status(201).json({ message: 'post liked or disliked !'}))
+          .catch(error => res.status(400).json({ error }));
+        }else{
+          res.send({message: "Already liked or disliked"})
         }
         break;
 

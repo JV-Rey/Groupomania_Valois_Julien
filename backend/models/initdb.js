@@ -3,6 +3,7 @@ const db = require('../config/database');
 const User = require('./User');
 const Post = require('./Post');
 const Comment = require('./Comment');
+const Like = require('./postLikes')
 
 let Init = async () => {    
     /* Si on veut tester la connexion */
@@ -16,10 +17,14 @@ let Init = async () => {
     Post.hasMany(Comment);
     Post.belongsTo(User, {onDelete: 'CASCADE'});    
     Comment.belongsTo(User, {onDelete: 'CASCADE'}); 
+    Post.hasMany(Like);
+    Like.belongsTo(Post, {onDelete: 'CASCADE'});
+    Like.belongsTo(User, {onDelete: 'CASCADE'});
     
     await User.sync({/* force: true */});
     await Post.sync({/* force: true */});
     await Comment.sync({/* force: true */});
+    await Like.sync({/* force: true */});
 }
 
 module.exports = Init;

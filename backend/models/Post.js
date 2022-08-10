@@ -11,14 +11,6 @@ const Post = db.define('post', {
   },
   imageUrl: {
     type: DataTypes.STRING,
-  },
-  like:{
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
-  dislike:{
-    type: DataTypes.INTEGER,
-    allowNull: false
   }
 }, {
   freezeTableName: true
