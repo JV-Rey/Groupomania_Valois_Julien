@@ -16,7 +16,6 @@
     data(){
       return {
         posts: [],
-        userInfo: JSON.parse(sessionStorage.getItem('userInfo'))
       }
     },
     created(){
@@ -40,6 +39,7 @@
       },
       deletePost(e){
         let token = sessionStorage.getItem('token');
+        let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
         let articleToDelete = e.target.closest("article")
         articleToDelete.remove()
         const options = {
@@ -49,7 +49,7 @@
             'Authorization' : 'Bearer ' + token
           }
         }
-        fetch('http://localhost:3000/api/post/' + id, options)
+        fetch('http://localhost:3000/api/post/' + userInfo.userId, options)
         .then(res => res.json())
         .then(data => this.posts = data)
         .catch(error => console.log(error))
