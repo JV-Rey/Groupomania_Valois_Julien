@@ -3,17 +3,17 @@
     <h2>Profile de {{actualUser.firstName + actualUser.lastName}}</h2>  
     <img :src="actualUser.imageUrl" alt="Votre image de profile">  
 
-    <form @submit.prevent="modifProfile(id)" class="flex" alt="formulaire de modifacation de profile">
+    <form @submit.prevent="modifProfile()" class="flex" alt="formulaire de modifacation de profile">
         <label for="email">Votre email est {{actualUser.email}}, voulez-vous la changer?</label>
-        <input type="text" name="email" id="email" v-model="actualUser.email" placeholder="ex : dupont@groupomania.fr" alt="renseigner votre nouvel email">
+        <input type="text" name="email" id="email"  placeholder="ex : dupont@groupomania.fr" alt="renseigner votre nouvel email">
         
         <label for="password">Voulez-vous changer votre mot de passe?</label>
-        <input type="password" name="password" id="password" v-model="actualUser.password" placeholder="ex : dupontpass!" alt="renseigner votre nouveau mot de passe">
+        <input type="password" name="password" id="password"  placeholder="ex : dupontpass!" alt="renseigner votre nouveau mot de passe">
         
         <label for="image">Voulez vous changer votre image de profile? :</label>
         <input type="file" name="image" id="image" accept="image/*" alt="changer votre image de profile">
     <button>Modifier les informations de votre profile.</button>
-    <button @click="deleteUser(id)">Supprimer votre compte.</button>   
+    <button @click="deleteUser()">Supprimer votre compte.</button>   
     </form>
 
     <div v-if="userInfo.isAdmin">
@@ -48,9 +48,9 @@
             this.getAllUsers()
         },
         methods: {
-            getOneUser(id){
+            getOneUser(){
                 let token = sessionStorage.getItem('token');
-                console.log(token);
+                let id = this.$route.params.id;
                 const options = {
                     method: "GET",
                     headers: {
@@ -79,9 +79,10 @@
             .catch(error => console.log(error))
             console.log(this.users);
             },
-            modifProfile(id){
+            modifProfile(){
                 let token = sessionStorage.getItem('token');
-                let input = document.getElementById('image')
+                let id = this.$route.params.id                
+                let input = document.getElementById('image');
                 let formData = new FormData();
                 formData.append('email', this.email)
                 formData.append('password', this.password)
@@ -99,8 +100,9 @@
                 .then(data => this.user = data)
                 .catch(error => console.log(error))
                 }, 
-            deleteUser(id){
+            deleteUser(){
                 let token = sessionStorage.getItem('token');
+                let id = this.$route.params.id  
                 const options = {
                     method: "delete",
                     headers: {
