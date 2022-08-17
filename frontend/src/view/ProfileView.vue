@@ -45,7 +45,8 @@
             }
         },
         created() {
-            this.getAllUsers()
+            //this.getAllUsers()
+            this.getOneUser()
         },
         methods: {
             getOneUser(){
@@ -84,8 +85,8 @@
                 let id = this.$route.params.id                
                 let input = document.getElementById('image');
                 let formData = new FormData();
-                formData.append('email', this.email)
-                formData.append('password', this.password)
+                formData.append('email', this.actualUser.email)
+                formData.append('password', this.actualUser.password)
                 formData.append('image', input.files[0])
                 const options = {
                     method: "PUT",
@@ -136,5 +137,9 @@
 
   button{
     margin: 20px;
+  }
+
+  img{
+    max-width: 310px;
   }
 </style>

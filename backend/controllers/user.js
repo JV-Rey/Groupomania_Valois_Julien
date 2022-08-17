@@ -77,7 +77,7 @@ exports.login = (req, res, next) => {
 }; 
 
 exports.deleteUser = (req, res, next) => {
-  User.findByPk({ where: { id: req.params.id }})  
+  User.findByPk( req.params.id )  
     .then(user => {
       if (user.id === req.token.userId || req.token.isAdmin){
         user.destroy({ id: req.params.id })
@@ -89,8 +89,9 @@ exports.deleteUser = (req, res, next) => {
 };
 
 exports.getOneUser = (req, res, next) => {
-  User.findByPk({ where: { id: req.params.id }})
+  User.findByPk( req.params.id )
     .then((user) => {
+      
       res.status(200).json(user);
     })
     .catch((error) => {
@@ -101,24 +102,22 @@ exports.getOneUser = (req, res, next) => {
 };
 
 exports.modifyUser = (req, res, next) => { 
-  User.findByPk({ where: { id: req.params.id }})
+  User.findByPk( req.params.id )
     .then((user) => {
       if (user.id === req.token.userId){
         //const salt = bcrypt.genSaltSync(10);
-        //const hash = bcrypt.hashSync(req.body.password, salt);        
-          user.update({
-            email: req.body.email,
-            //password: hash,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/profile/${req.file.filename}`: null, 
-          })
-          .then(() => res.status(200).json({ message: 'Information(s) de votre compte modifiée(s) !'}))
-          .catch(error => res.status(400).json({ error }));        
+        //const hash = bcrypt.hashSync(req.body.password, salt);    
+        user.update({
+          email: req.body.email,
+          //password: hash,
+          imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/profile/${req.file.filename}`: `/images/profile/avatardefault_92824.png`, 
+        })
+        .then(() => res.status(200).json({ message: 'Information(s) de votre compte modifiée(s) !'}))
+        .catch(error => res.status(400).json({ error }));        
       }else{
         res.status(403).json({ message: 'unauthorized request' });
       };    
-  })
+    })
   .catch(error => res.status(500).json({ message: error.message }));
 }
 
