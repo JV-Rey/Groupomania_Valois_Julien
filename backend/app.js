@@ -8,6 +8,7 @@ const helmet = require("helmet");
 const postRoutes = require('./routes/Posts');
 const commentRoutes = require('./routes/Comments')
 const userRoutes = require('./routes/user');
+const likeRoutes = require('./routes/Likes');
 
 const app = express();
 
@@ -30,6 +31,7 @@ InitDB().then(() => {
   app.use('/api/post', postRoutes);
   app.use('/api/comment', commentRoutes)
   app.use('/api/auth', userRoutes);
+  app.use('/api/likes', likeRoutes)
 })
 
 module.exports = app;

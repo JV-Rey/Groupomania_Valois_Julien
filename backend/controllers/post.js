@@ -48,15 +48,15 @@ exports.getOnePost = (req, res, next) => {
  * Si aucun fichier n'est fourni, les informations sur le post se trouvent directement dans le corps de la requête
  * Si un fichier est fourni, le post transformée en chaîne de caractères se trouve dans req.body.post */
 exports.modifyPost = (req, res, next) => {
-  Post.findByPk({ where:{id: req.params.id }})
+  Post.findByPk( req.params.id )
   .then(post => {
-    if (post.userId === req.token.userId || req.token.isAdmin){      
-      post.update(
-        {titre: req.body.titre,
-          text: req.body.text,
-          imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null,
-        }
-      )
+    if (post.userId === req.token.userId || req.token.isAdmin){  
+      post.set({
+        titre: req.body.titre,
+        text: req.body.text,
+        imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null,
+      })    
+      post.save()
       .then(() => res.status(200).json({ message: 'post modifiée !'}))
       .catch(error => res.status(400).json({ error }));
     };
@@ -65,7 +65,7 @@ exports.modifyPost = (req, res, next) => {
 
 /** Supprime le post avec l'id fourni. */
 exports.deletePost = (req, res, next) => {
-  Post.findByPk({ where:{id: req.params.id }})
+  Post.findByPk( req.params.id )
   .then(post => {    
     if (post.userId === req.token.userId || req.token.isAdmin){
       if (post.imageUrl){
@@ -90,7 +90,8 @@ exports.getAllPosts = (req, res, next) => {
   Post.findAll({
     include: [
       {model: User, attributes: ["firstName", "lastName"] },
-      {model: Comment, include: [{model: User, attributes: ["firstName", "lastName"] }] }
+      {model: Comment, include: [{model: User, attributes: ["firstName", "lastName"] }] },
+      {model: Like}
     ]
   })
   .then((posts) => {
@@ -116,9 +117,14 @@ exports.getLikesDislikes = (req, res, next) => {
   .then((like) => {
     switch (likeType) {
       case 0:
-        
+        if (like){
+          like.destroy
+          .then(() => res.status(201).json({ message: 'like or dislike canceled !'}))
+          .catch(error => res.status(400).json({ error }));
+        }else{
+          res.send({message: "Already canceled"})
+        }
         break;
-
         
       case -1:
       case 1:
@@ -138,10 +144,7 @@ exports.getLikesDislikes = (req, res, next) => {
       default:
         break;        
     }
-    post.likes = post.usersLiked.length;
-    post.dislikes = post.usersDisliked.length;
-
-    post.updateOne({_id: req.params.id }, post)
+    Like.update({where: { postId: req.params.id, userId: req.token.userId }})
     .then(() => res.status(200).json({ message: 'post évaluée !' }))
     .catch(error => res.status(400).json({ error }))
   })

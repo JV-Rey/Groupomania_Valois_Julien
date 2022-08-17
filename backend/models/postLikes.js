@@ -8,6 +8,14 @@ const Like = db.define('likes', {
   },
 }, {
   freezeTableName: true
-})
+});
+
+const likeCount = Like.count({
+  where: {likeType: "1"}
+});
+
+const dislikeCount = Like.count({
+  where: {likeType: "-1"}
+});
  
 module.exports = Like;
