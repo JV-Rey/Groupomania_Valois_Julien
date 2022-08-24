@@ -4,14 +4,14 @@
     <img :src="actualUser.imageUrl" alt="Votre image de profile">  
 
     <form @submit.prevent="modifProfile()" class="flex" alt="formulaire de modifacation de profile">
-        <label for="email">Votre email est {{actualUser.email}}, voulez-vous la changer?</label>
-        <input type="text" name="email" id="email" v-model="actualUser.email" placeholder="ex : dupont@groupomania.fr" alt="renseigner votre nouvel email">
+        <label for="email">Votre email est <span>{{actualUser.email}}</span>, voulez-vous la changer?</label>
+        <input type="text" name="email" id="email" v-model="email" placeholder="ex : dupont@groupomania.fr" alt="renseigner votre nouvel email">
         
         <label for="password">Voulez-vous changer votre mot de passe?</label>
-        <input type="password" name="password" id="password" v-model="actualUser.password" placeholder="ex : dupontpass!" alt="renseigner votre nouveau mot de passe">
+        <input type="password" name="password" id="password" v-model="password" placeholder="ex : dupontpass!" alt="renseigner votre nouveau mot de passe">
         
         <label for="image">Voulez vous changer votre image de profile? :</label>
-        <input type="file" name="image" id="image" accept="image/*" alt="changer votre image de profile">
+        <input type="file" ref="inputImg" name="image" id="image" accept="image/*" alt="changer votre image de profile">
     <button>Modifier les informations de votre profile.</button>
     <button @click="deleteUser()">Supprimer votre compte.</button>   
     </form>
@@ -45,7 +45,7 @@
             }
         },
         created() {
-            //this.getAllUsers()
+            this.getAllUsers()
             this.getOneUser()
         },
         methods: {
@@ -83,10 +83,10 @@
             modifProfile(){
                 let token = sessionStorage.getItem('token');
                 let id = this.$route.params.id                
-                let input = document.getElementById('image');
+                let input = this.$refs.inputImg;
                 let formData = new FormData();
-                formData.append('email', this.actualUser.email)
-                formData.append('password', this.actualUser.password)
+                formData.append('email', this.email)
+                formData.append('password', this.password)
                 formData.append('image', input.files[0])
                 const options = {
                     method: "PUT",
