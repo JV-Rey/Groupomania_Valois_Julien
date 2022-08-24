@@ -51,11 +51,18 @@ exports.modifyPost = (req, res, next) => {
   Post.findByPk( req.params.id )
   .then(post => {
     if (post.userId === req.token.userId || req.token.isAdmin){  
-      post.set({
-        titre: req.body.titre,
-        text: req.body.text,
-        imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null,
-      })    
+      // if (req.body.imageUrl)
+        post.set({
+          titre: req.body.titre,
+          text: req.body.text,
+          imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: post.imageUrl,
+        });
+        // else{
+        //   post.set({
+        //     titre: req.body.titre,
+        //     text: req.body.text
+        //   }) 
+        // }
       post.save()
       .then(() => res.status(200).json({ message: 'post modifiée !'}))
       .catch(error => res.status(400).json({ error }));
@@ -81,7 +88,7 @@ exports.deletePost = (req, res, next) => {
         .catch(error => res.status(400).json({ error }));
       }
     }
-   })
+  })
   .catch(error => res.status(500).json({ error }));
 };
 
@@ -112,7 +119,7 @@ exports.getAllPosts = (req, res, next) => {
  * L'ID de l'utilisateur doit être ajouté ou retiré du tableau approprié
  * Le nombre total de « Like » et de « Dislike » est mis à jour à chaque nouvelle notation
  */
-exports.getLikesDislikes = (req, res, next) => {
+exports.likesDislikes = (req, res, next) => {
   Like.findOne({where: { postId: req.params.id, userId: req.token.userId }})
   .then((like) => {
     switch (likeType) {
@@ -149,4 +156,13 @@ exports.getLikesDislikes = (req, res, next) => {
     .catch(error => res.status(400).json({ error }))
   })
   .catch((error) => res.status(400).json({ error }));
+};
+
+exports.getLikesDislikes = async (req, res, next) => {
+  try {
+    const likesCount = await Like.count({where: likeType = "1" , postId: Like.postId})
+    const dislikesCount = await Like.count({where: dislikeType = "-1" , postId: Like.postId})
+    res.status(200).json({ likesCount, dislikesCount })
+  } catch (error) {res.status(500).json({ error })
+  }
 };
