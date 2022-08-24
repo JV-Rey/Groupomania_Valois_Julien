@@ -5,7 +5,7 @@
             <a href="/" class="nav">Acceuil</a>
             <a href="/newpost" class="nav">Creer un post</a>
             <router-link :to="'/profile/' + userInfo.userId" class="nav">Votre profile</router-link>
-            <a href="/login" class="nav">Déconnection</a>
+            <a href="/login" @click="deleteTempInfo()" class="nav">Déconnection</a>
         </div>
     </div>
     <h1>Bienvenu sur Groupomania!</h1>
@@ -19,6 +19,13 @@
                 userInfo: JSON.parse(sessionStorage.getItem('userInfo'))
             }
         },
+        methods: {
+            deleteTempInfo(){
+                window.onunload = function () {
+                    sessionStorage.removeItem("userInfo", "token");
+                }                
+            }
+        }
     }
 </script>
 
