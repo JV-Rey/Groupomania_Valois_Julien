@@ -41,6 +41,7 @@
         .then(data => {
           if (data.token){
             sessionStorage.setItem('token', data.token);
+            this.$router.push("/");
           }
           if (data.userId && (typeof data.isAdmin != "undefined")){
             sessionStorage.setItem('userInfo', JSON.stringify({
