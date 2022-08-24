@@ -79,16 +79,16 @@ import Comment from './Comment.vue';
       },
       deletePost(){
         let token = sessionStorage.getItem('token');
-        let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
-
+        let postToDelete = this.post.id;
+        postToDelete.remove;
         const options = {
-          method: "GET",
+          method: "delete",
           headers: {
             'Content-type' : 'application/json',
             'Authorization' : 'Bearer ' + token
           }
         }
-        fetch('http://localhost:3000/api/post/' + userInfo.userId, options)
+        fetch('http://localhost:3000/api/post/' + this.post.id, options)
         .then(res => res.json())
         .then(data => this.posts = data)
         .catch(error => console.log(error))
