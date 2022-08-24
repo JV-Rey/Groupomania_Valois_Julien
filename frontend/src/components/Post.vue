@@ -10,8 +10,8 @@
         <h2 class="margin">{{post.titre}}</h2>
         <p class="margin">{{post.text}}</p>
         <img class="post-image" :src="post.imageUrl">
-        <!-- <button @click="likePost()">J'aime({{likes.likeCount}})</button>
-        <button @click="dislikePost()">Je n'aime pas({{likes.dislikeCount}})</button> -->
+        <button @click="likePost()">J'aime({{likes.likeCount}})</button>
+        <button @click="dislikePost()">Je n'aime pas({{likes.dislikeCount}})</button>
         <button v-if="post.userId === userInfo.userId || userInfo.isAdmin" @click='toggle = !toggle'>Modifié votre post?</button>
           <form @submit.prevent="modifyPost()" v-show='toggle' class="flex" alt="formulaire de création de post">
             <label for="titre">Titre :</label>      
@@ -21,10 +21,10 @@
             <textarea id="text" name="text" rows="4" cols="50" v-model="text" placeholder="ex : Text de votre post" alt="renseigner le text de votre post"></textarea> 
                 
             <label for="image">Image(optionel) :</label>
-            <input type="file" name="image" id="image" accept="image/*" alt="ajouter une image">
+            <input type="file" ref="inputImg" name="image" id="image" accept="image/*" alt="ajouter une image">
             <button>finalisé votre post</button>
           </form>
-        <button v-if="post.userId === userInfo.userId || userInfo.isAdmin" @click="deletePost(e)">Supprimer ce post</button>
+        <button v-if="post.userId === userInfo.userId || userInfo.isAdmin" @click="deletePost($index)">Supprimer ce post</button>
       </div>
         <Comment v-for="comment in post.comments" :key="comment.id" :comment="comment"></Comment>
       <div>
@@ -36,7 +36,7 @@
 
 <script>
 import Comment from './Comment.vue';
-    export default{
+  export default{
     name: "PostComp",
     props: {
         post: {
@@ -49,20 +49,20 @@ import Comment from './Comment.vue';
         userInfo: JSON.parse(sessionStorage.getItem('userInfo')),
         toggle: false,
         modifPost:{
-          titre:'',
-          text:''
-        }
+          titre: this.post.titre,
+          text: this.post.text,
+        },
+        likes: []
       }
     },
     components: { Comment },
-    methods: {
-            modifyPost(){
+     methods: {
+      modifyPost(){
         let token = sessionStorage.getItem('token');
-        let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
-        let input = document.getElementById('image');
+        let input = this.$refs.inputImg;
         let formData = new FormData();
-        formData.append('titre', this.modifPost.titre)
-        formData.append('text', this.modifPost.text)
+        formData.append('titre', this.titre)
+        formData.append('text', this.text)
         formData.append('image', input.files[0])
         const options = {
           method: "PUT",
@@ -72,13 +72,48 @@ import Comment from './Comment.vue';
             'Authorization' : 'Bearer ' + token
           }
         }
+        fetch('http://localhost:3000/api/post/' + this.post.id, options)
+        .then(res => res.json())
+        .then(data => this.posts = data)
+        .catch(error => console.log(error))
+      },
+      deletePost(){
+        let token = sessionStorage.getItem('token');
+        let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+
+        const options = {
+          method: "GET",
+          headers: {
+            'Content-type' : 'application/json',
+            'Authorization' : 'Bearer ' + token
+          }
+        }
         fetch('http://localhost:3000/api/post/' + userInfo.userId, options)
         .then(res => res.json())
         .then(data => this.posts = data)
         .catch(error => console.log(error))
+      },
+      // likePost(){
+      //   let token = sessionStorage.getItem('token');
+      //   if (likes.likeType == 0 && likes.likeType !== -1 && !likes.postId && !likes.userId) {
+      //     likes.likeType = 1
+      //   }else{
+      //     likes.likeType = 0
+      //   }
+      //   const options = {
+      //     method: "POST",
+      //     headers: {
+      //       'Content-type' : 'application/json',
+      //       'Authorization' : 'Bearer ' + token
+      //     }
+      //   }
+      //   fetch('http://localhost:3000/api/likes/' + likes.id, options)
+      //   .then(res => res.json())
+      //   .then(data => this.posts = data)
+      //   .catch(error => console.log(error))
+      // }
       }
-    },
-};
+  };
 </script>
 
 <style>
