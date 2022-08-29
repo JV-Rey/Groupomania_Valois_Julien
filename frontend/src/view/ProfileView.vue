@@ -15,16 +15,14 @@
     <button>Modifier les informations de votre profile.</button>
     <button @click="deleteUser()">Supprimer votre compte.</button>   
     </form>
-
     <div v-if="userInfo.isAdmin">
-        <Users  v-for="user in users" :key="user.id" :user="user"></Users>
+        <Users v-for="user in users" :key="user.id" :user="user"></Users>
     </div>
 </template>
 
 <script>
     import Header from "../components/Header.vue";
     import Users from "../components/Users.vue";
-
     export default {
         name: 'profileView',
         components: {
