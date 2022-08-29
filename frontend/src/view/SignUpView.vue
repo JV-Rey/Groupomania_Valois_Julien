@@ -50,6 +50,7 @@
         }
         fetch("http://localhost:3000/api/auth/signup", options)
         .then(res => res.json())
+        this.$router.push("/login")
         .catch(error => console.log(error))
       }
     },

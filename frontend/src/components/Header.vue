@@ -22,7 +22,7 @@
         methods: {
             deleteTempInfo(){
                 window.onunload = function () {
-                    sessionStorage.removeItem("userInfo", "token");
+                    sessionStorage.clear();
                 }                
             }
         }

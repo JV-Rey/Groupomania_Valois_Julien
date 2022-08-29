@@ -48,6 +48,7 @@
         fetch("http://localhost:3000/api/post", options)
         .then(res => res.json())
         .then(data => this.post = data)
+        .then(() => this.$router.push("/"))
         .catch(error => console.log(error))
       }     
     },
