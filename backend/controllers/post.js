@@ -51,11 +51,15 @@ exports.modifyPost = (req, res, next) => {
   Post.findByPk( req.params.id )
   .then(post => {
     if (post.userId === req.token.userId || req.token.isAdmin){  
-      // if (req.body.imageUrl)
+      let imageUrl = "";
+       if (req.file){
+        imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+       }       
         post.set({
           titre: req.body.titre,
           text: req.body.text,
-          imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: post.imageUrl,
+          ...(imageUrl !== undefined && {imageUrl})
+          // imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: post.imageUrl,
         });
         // else{
         //   post.set({

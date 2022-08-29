@@ -45,6 +45,7 @@
         fetch("http://localhost:3000/api/comment", options)
         .then(res => res.json())
         .then(data => this.comment = data)
+        .then(() => this.$router.push("/"))
         .catch(error => console.log(error))
       }     
     },

@@ -9,8 +9,13 @@
             <p class="margin">{{comment.text}}</p>
         </div>
         <div>
-            <button v-if="comment.userId === userInfo.userId || userInfo.isAdmin">Modifier ce commentaire</button>
-            <button v-if="comment.userId === userInfo.userId || userInfo.isAdmin">Supprimer ce commentaire</button>
+            <button v-if="comment.userId === userInfo.userId || userInfo.isAdmin" @click='toggle = !toggle'>Modifier ce commentaire</button>
+                <form @submit.prevent="modifyComment()" v-show='toggle'  alt="formulaire de création de post">
+                    <label for="text">Text :</label>
+                    <textarea id="text" name="text" rows="4" cols="50" v-model="modifComment.text" alt="renseigner le text de votre post"></textarea> 
+                    <button class="margin">finalisé votre post</button>
+                </form>
+            <button @click="deleteComment()" v-if="comment.userId === userInfo.userId || userInfo.isAdmin">Supprimer ce commentaire</button>
         </div>
     </article>
 </template>
@@ -26,7 +31,40 @@
         },
         data() {
             return {
-                userInfo: JSON.parse(sessionStorage.getItem('userInfo'))
+                userInfo: JSON.parse(sessionStorage.getItem('userInfo')),
+                toggle: false,
+                modifComment:{
+                    text: this.comment.text,
+                },
+            }
+        },
+        methods: {
+            modifyComment(){
+                let token = sessionStorage.getItem('token');
+                const options = {
+                method: "PUT",
+                body: JSON.stringify(this.modifComment),
+                headers: {
+                    'Content-type' : 'application/json',
+                    'Authorization' : 'Bearer ' + token
+                }
+                }
+                fetch('http://localhost:3000/api/comment/' + this.comment.id, options)
+                .then(res => res.json())
+                .then(data => this.comments = data)
+                .catch(error => console.log(error))
+            },
+            deleteComment(){
+                let token = sessionStorage.getItem('token');
+                const options = {
+                method: "delete",
+                headers: {
+                    'Content-type' : 'application/json',
+                    'Authorization' : 'Bearer ' + token
+                }
+                }
+                fetch('http://localhost:3000/api/comment/' + this.comment.id, options)
+                .catch(error => console.log(error))
             }
         },
     };
