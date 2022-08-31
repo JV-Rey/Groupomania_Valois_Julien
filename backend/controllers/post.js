@@ -54,19 +54,18 @@ exports.modifyPost = (req, res, next) => {
       let imageUrl = "";
        if (req.file){
         imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-       }       
         post.set({
           titre: req.body.titre,
           text: req.body.text,
           ...(imageUrl !== undefined && {imageUrl})
           // imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: post.imageUrl,
         });
-        // else{
-        //   post.set({
-        //     titre: req.body.titre,
-        //     text: req.body.text
-        //   }) 
-        // }
+       }else{
+          post.set({
+            titre: req.body.titre,
+            text: req.body.text
+          }) 
+        }
       post.save()
       .then(() => res.status(200).json({ message: 'post modifiée !'}))
       .catch(error => res.status(400).json({ error }));
