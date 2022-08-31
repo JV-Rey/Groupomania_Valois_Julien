@@ -1,23 +1,21 @@
 <template>
-    <article class="article">
-        <div class="author">
-            <p>{{comment.user.firstName + comment.user.lastName}}</p>
+    <div>
+        <div class="comment">
+            <p>{{comment.user.firstName + ' ' + comment.user.lastName}}</p>
             <p>Créé le {{comment.createdAt}}</p>
             <p>modifié le {{comment.uptatedAt}}</p>
-        </div>
-        <div class="comment">
-            <p class="margin">{{comment.text}}</p>
+            <p class="margin textComment">{{comment.text}}</p>
         </div>
         <div>
-            <button v-if="comment.userId === userInfo.userId || userInfo.isAdmin" @click='toggle = !toggle'>Modifier ce commentaire</button>
+            <button class="margin" v-if="comment.userId === userInfo.userId || userInfo.isAdmin" @click='toggle = !toggle'>Modifier ce commentaire</button>
                 <form @submit.prevent="modifyComment()" v-show='toggle'  alt="formulaire de création de post">
                     <label for="text">Text :</label>
-                    <textarea id="text" name="text" rows="4" cols="50" v-model="modifComment.text" alt="renseigner le text de votre post"></textarea> 
+                    <textarea class="marginTop" id="text" name="text" rows="4" cols="50" v-model="modifComment.text" alt="renseigner le text de votre post"></textarea> 
                     <button class="margin">finalisé votre post</button>
                 </form>
             <button @click="deleteComment()" v-if="comment.userId === userInfo.userId || userInfo.isAdmin">Supprimer ce commentaire</button>
         </div>
-    </article>
+    </div>
 </template>
 
 <script>
@@ -70,22 +68,23 @@
     };
 </script>
 
-<style>
+<style scoped>
     .comment{
-        background-color: #FFD7D7;
-        border: 3px solid #FD2D01;
-        border-radius: 20px;
-    }
-
-    .margin{
-        margin: 20px;
-    }
-
-    article{
         background-color: #FFD7D7;
         border: 5px solid #FD2D01;
         border-radius: 20px;
         box-shadow: 20px 5px 20px #4E5166;
-        margin-bottom: 40px;
+    }
+
+    .margin{
+        margin: 20px auto;
+    }
+
+    .marginTop{
+        margin-top: 10px auto;
+    }
+
+    .textComment{
+        font-weight: bold;
     }
 </style>

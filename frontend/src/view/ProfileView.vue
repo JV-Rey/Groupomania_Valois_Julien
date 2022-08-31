@@ -1,21 +1,23 @@
 <template>
     <Header></Header>
-    <h2>Profile de {{actualUser.firstName + actualUser.lastName}}</h2>  
-    <img :src="actualUser.imageUrl" alt="Votre image de profile">  
+    <div class="user">
+        <h2>Profile de {{actualUser.firstName + ' ' + actualUser.lastName}}</h2>  
+        <img :src="actualUser.imageUrl" alt="Votre image de profile">  
 
-    <form @submit.prevent="modifProfile()" class="flex" alt="formulaire de modifacation de profile">
-        <label for="email">Votre email est <span>{{actualUser.email}}</span>, voulez-vous la changer?</label>
-        <input type="text" name="email" id="email" v-model="email" placeholder="ex : dupont@groupomania.fr" alt="renseigner votre nouvel email">
-        
-        <label for="password">Voulez-vous changer votre mot de passe?</label>
-        <input type="password" name="password" id="password" v-model="password" placeholder="ex : dupontpass!" alt="renseigner votre nouveau mot de passe">
-        
-        <label for="image">Voulez vous changer votre image de profile? :</label>
-        <input type="file" ref="inputImg" name="image" id="image" accept="image/*" alt="changer votre image de profile">
-    <button>Modifier les informations de votre profile.</button>
-    <button @click="deleteUser()">Supprimer votre compte.</button>   
-    </form>
-    <div v-if="userInfo.isAdmin">
+        <form @submit.prevent="modifProfile()" class="flex" alt="formulaire de modifacation de profile">
+            <label for="email">Votre email est <span>{{actualUser.email}}</span>, voulez-vous la changer?</label>
+            <input type="text" name="email" id="email" v-model="email" placeholder="ex : dupont@groupomania.fr" alt="renseigner votre nouvel email">
+            
+            <label for="password">Voulez-vous changer votre mot de passe?</label>
+            <input type="password" name="password" id="password" v-model="password" placeholder="ex : dupontpass!" alt="renseigner votre nouveau mot de passe">
+            
+            <label for="image">Voulez vous changer votre image de profile? :</label>
+            <input type="file" ref="inputImg" name="image" id="image" accept="image/*" alt="changer votre image de profile">
+        <button>Modifier les informations de votre profile.</button>
+        <button @click="deleteUser()">Supprimer votre compte.</button>   
+        </form>
+    </div>
+    <div v-if="userInfo.isAdmin" class="user">
         <Users v-for="user in users" :key="user.id" :user="user"></Users>
     </div>
 </template>
@@ -119,6 +121,15 @@
 </script>
 
 <style>
+    .user{
+        background-color: #FFD7D7;
+        border: 5px solid #FD2D01;
+        border-radius: 20px;
+        box-shadow: 20px 5px 20px #4E5166;
+        margin-bottom: 40px;
+        font-weight: bolder;
+    }
+
   .flex{
     display: flex;
     flex-direction: column;
@@ -126,7 +137,11 @@
 
   form{
     width: 50%;
-    margin: 20px 25%;
+    margin: 20px auto;
+  }
+
+  input{
+    margin: auto;
   }
 
   label{
@@ -134,7 +149,7 @@
   }
 
   button{
-    margin: 20px;
+    margin: 20px auto;
   }
 
   img{

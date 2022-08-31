@@ -48,8 +48,4 @@
         width: 200px;
     };
 
-    h1{
-        color: #FD2D01;
-        margin-top: 20px;
-    }
 </style>

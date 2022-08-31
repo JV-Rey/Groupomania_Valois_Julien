@@ -1,7 +1,7 @@
 <template>
     <div>
         <img :src="user.imageUrl" alt="">
-        <p>{{user.firstName + user.lastName}}</p>
+        <p>{{user.firstName + ' ' + user.lastName}}</p>
         <p>email: {{user.email}}</p>
         <button @click="deleteThisUser()">Supprimer ce compte.</button>
     </div>

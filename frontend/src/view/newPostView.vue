@@ -1,17 +1,19 @@
 <template>
   <Header></Header>
-  <h3>Vous pouvez créé et publié un post.</h3>
-  <form @submit.prevent="createPost" class="flex" alt="formulaire de création de post">
-    <label for="titre">Titre :</label>      
-    <input type="text" name="titre" class="form-control" id="titre" v-model="titre" placeholder="ex : Titre du post" alt="renseigner le titre de votre post">
-        
-    <label for="text">Text :</label>
-    <textarea id="text" name="text" rows="4" cols="50" v-model="text" placeholder="ex : Text de votre post" alt="renseigner le text de votre post"></textarea> 
-        
-    <label for="image">Image(optionel) :</label>
-    <input type="file" name="image" id="image" accept="image/*" alt="ajouter une image">
-    <button>Créer un post</button>
-  </form>
+  <div class="color">
+    <h3>Vous pouvez créé et publié un post.</h3>
+    <form @submit.prevent="createPost()" class="flex" alt="formulaire de création de post">
+      <label class="margin" for="titre">Titre :</label>      
+      <input type="text" name="titre" class="form-control" id="titre" v-model="titre" placeholder="ex : Titre du post" alt="renseigner le titre de votre post">
+          
+      <label class="margin" for="text">Text :</label>
+      <textarea id="text" name="text" rows="4" cols="50" v-model="text" placeholder="ex : Text de votre post" alt="renseigner le text de votre post"></textarea> 
+          
+      <label class="margin" for="image">Image(optionel) :</label>
+      <input class="center" type="file" name="image" id="image" accept="image/*" alt="ajouter une image">
+      <button class="margin">Créer un post</button>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -25,8 +27,7 @@
     data(){
       return{        
           titre:"",
-          text:"",
-          //imageUrl:"",        
+          text:""     
       }
     },    
     methods: {
@@ -55,22 +56,29 @@
   }
 </script>
 
-<style>
+<style scoped>
   .flex{
     display: flex;
     flex-direction: column;
   }
 
   form{
-    width: 50%;
-    margin: 20px 25%;
+    width: 35%;
+    margin: 20px auto;
   }
 
-  label{
-    margin: 20px;
+  .margin{
+    margin: 20px 0px;
   }
 
-  button{
-    margin: 20px;
+  .center{
+    margin: auto;
   }
+
+  .color{
+      background-color: #FFD7D7;
+      border: 10px solid #FD2D01;
+      border-radius: 20px;
+      box-shadow: 20px 5px 20px #4E5166;
+    }
 </style>

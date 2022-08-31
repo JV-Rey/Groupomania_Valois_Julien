@@ -1,19 +1,21 @@
 <template>
   <img src="../assets/icon-left-font.svg" alt="Logo Groupomania">
-  <h3>Connection:</h3>
-  <form @submit.prevent="login" alt="formulaire de connection à Groupomania">
-    <div class="form-group">
-      <label for="email">Votre adresse mail :</label>
-      <input type="text" id="email" required v-model="credentials.email" placeholder="ex : dupont@groupomania.fr" alt="renseigner votre email">
-    </div>
-    
-    <div class="form-group">
-      <label for="password">Votre mot de passe :</label>
-      <input type="password" id="password" required v-model="credentials.password" placeholder="ex : dupontpass!" alt="choisir votre mot de passe">
-    </div>
-    <button>Connection</button>
-  </form>
-  <p>Si vous n'avez pas de compte, vous pouvez en <a href="/signup">créer</a> un!</p>
+  <div class="border">
+    <h3>Connection:</h3>
+    <form @submit.prevent="login" alt="formulaire de connection à Groupomania">
+      <div class="form-group">
+        <label for="email">Votre adresse mail :</label>
+        <input type="text" id="email" required v-model="credentials.email" placeholder="ex : dupont@groupomania.fr" alt="renseigner votre email">
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Votre mot de passe :</label>
+        <input type="password" id="password" required v-model="credentials.password" placeholder="ex : dupontpass!" alt="choisir votre mot de passe">
+      </div>
+      <button>Connection</button>
+    </form>
+    <p>Si vous n'avez pas de compte, vous pouvez en <a href="/signup">créer</a> un!</p>
+  </div>
 </template>
 
 <script>
@@ -56,7 +58,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   img{
     width: 200px;
   }
@@ -66,9 +68,9 @@
   }
 
   .form-group {
-      display: flex;
-      justify-content: center;
-      padding: 1.5rem;
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem;
   }
 
   label{
@@ -78,4 +80,17 @@
   button{
     margin: 20px;
   }
+
+  .border{
+        background-color: #FFD7D7;
+        border: 5px solid #FD2D01;
+        border-radius: 20px;
+        box-shadow: 20px 5px 20px #4E5166;
+        margin-top: 20px;
+    }
+
+    a{
+      color: #FD2D01;
+      font-weight: bold;
+    }
 </style>

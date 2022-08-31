@@ -1,13 +1,13 @@
 <template>
   <Header></Header>
+  <div class="color">
     <h3>Vous pouvez publié un commentaire.</h3>
-    <form @submit.prevent="createComment" alt="formulaire de création de commentaire">
-      <div>
+    <form class="flex" @submit.prevent="createComment" alt="formulaire de création de commentaire">
         <label for="text">Text :</label>
-        <textarea id="text" name="Comment" rows="4" cols="50" v-model="comment.text" placeholder="ex : Text de votre commentaire" alt="renseigner le text de votre commentaire"></textarea> 
-      </div>
-    <button>Créer un commentaire</button>
+        <textarea class="margin" id="text" name="Comment" rows="4" cols="50" v-model="comment.text" placeholder="ex : Text de votre commentaire" alt="renseigner le text de votre commentaire"></textarea>
+    <button class="margin">Créer un commentaire</button>
   </form>
+  </div>
 </template>
 
 <script>
@@ -52,22 +52,20 @@
   }
 </script>
 
-<style>
+<style scoped>
   .flex{
     display: flex;
     flex-direction: column;
   }
 
-  form{
-    width: 50%;
-    margin: 20px 25%;
+  .margin{
+    margin: 10px auto;
   }
 
-  label{
-    margin: 20px;
-  }
-
-  button{
-    margin: 20px;
+  .color{
+    background-color: #FFD7D7;
+    border: 10px solid #FD2D01;
+    border-radius: 20px;
+    box-shadow: 20px 5px 20px #4E5166;
   }
 </style>

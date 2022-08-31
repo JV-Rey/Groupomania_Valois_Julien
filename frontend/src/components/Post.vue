@@ -1,19 +1,17 @@
 <template>
   <section>
     <article class="article">
-      <div class="author">
-        <p>{{post.user.firstName + post.user.lastName}}</p>
+      <div class="post flex">
+        <p>{{post.user.firstName + ' ' + post.user.lastName}}</p>
         <p>Créé le {{post.createdAt}}</p>
         <p>modifié le {{post.uptatedAt}}</p>
-      </div>
-      <div class="post flex ">
         <h2 class="margin">{{post.titre}}</h2>
         <p class="margin">{{post.text}}</p>
         <img class="post-image" :src="post.imageUrl">
         <button @click="likePost()">J'aime({{likes.likeCount}})</button>
         <button @click="dislikePost()">Je n'aime pas({{likes.dislikeCount}})</button>
-        <button  v-if="post.userId === userInfo.userId || userInfo.isAdmin" @click='toggle = !toggle'>Modifié votre post?</button>
-          <form @submit.prevent="modifyPost()" v-show='toggle'  alt="formulaire de création de post">
+        <button v-if="post.userId === userInfo.userId || userInfo.isAdmin" @click='toggle = !toggle'>Modifié votre post?</button>
+          <form class="flex" @submit.prevent="modifyPost()" v-show='toggle'  alt="formulaire de création de post">
             <label for="titre" class="margin">Titre :</label>      
             <input type="text" name="titre" class="margin" id="titre" v-model="modifPost.titre" alt="renseigner le titre de votre post">
                 
@@ -26,10 +24,10 @@
           </form>
         <button v-if="post.userId === userInfo.userId || userInfo.isAdmin" @click="deletePost()">Supprimer ce post</button>
       </div>
-        <Comment v-for="comment in post.comments" :key="comment.id" :comment="comment"></Comment>
-      <div>
-        <router-link :to="'/newComment/' + post.id">Ajoutez un commentaire</router-link>
+      <div class="margin">
+        <router-link :to="'/newComment/' + post.id" class="font">Ajoutez un commentaire</router-link>
       </div>
+        <Comment v-for="comment in post.comments" :key="comment.id" :comment="comment"></Comment>
     </article>
   </section>
 </template>
@@ -114,27 +112,31 @@ import Comment from './Comment.vue';
   };
 </script>
 
-<style>
+<style scoped>
     .article{
       word-wrap: break-word;
       padding: 3% 20%;        
       background-color: #FFD7D7;
+      border: 12px solid #FD2D01;
+      border-radius: 20px;
+      box-shadow: 20px 5px 20px #FFD7D7;
+      margin-bottom: 40px;
     }
 
     .post{
       background-color: #FFD7D7;
-      border: 10px solid #FD2D01;
+      border: 7px solid #FD2D01;
       border-radius: 20px;
       box-shadow: 20px 5px 20px #4E5166;
-      margin-bottom: 40px;
+      
     }
 
     .margin{
-        margin: 20px;
+        margin: 20px auto;
     }
 
     button{
-      margin: 10px 35%;
+      margin: 10px auto;
     }
 
     .post-image{
@@ -148,7 +150,13 @@ import Comment from './Comment.vue';
     }
 
     form {
-        width: 50%;
-        margin: 20px 25%;
+        width: 35%;
+        margin: 10px auto;
+    }
+
+    .font{
+      font-size: larger;
+      font-weight: bolder;
+      color: #FD2D01;
     }
 </style>
