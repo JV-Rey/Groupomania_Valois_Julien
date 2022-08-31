@@ -10,7 +10,7 @@
         <img class="post-image" :src="post.imageUrl">
         <button @click="likePost()">J'aime({{likes.likeCount}})</button>
         <button @click="dislikePost()">Je n'aime pas({{likes.dislikeCount}})</button>
-        <button v-if="post.userId === userInfo.userId || userInfo.isAdmin" @click='toggle = !toggle'>Modifié votre post?</button>
+        <button v-if="post.userId === userInfo.userId || userInfo.isAdmin" @click='toggle = !toggle'>Modifier votre post?</button>
           <form class="flex" @submit.prevent="modifyPost()" v-show='toggle'  alt="formulaire de création de post">
             <label for="titre" class="margin">Titre :</label>      
             <input type="text" name="titre" class="margin" id="titre" v-model="modifPost.titre" alt="renseigner le titre de votre post">
@@ -20,7 +20,7 @@
                 
             <label for="image" class="margin">Image(optionel) :</label>
             <input type="file" class="margin" ref="inputImg" name="image" id="image" accept="image/*" alt="ajouter une image">
-            <button class="margin">finalisé votre post</button>
+            <button class="margin">Modifier</button>
           </form>
         <button v-if="post.userId === userInfo.userId || userInfo.isAdmin" @click="deletePost()">Supprimer ce post</button>
       </div>
@@ -89,25 +89,44 @@ import Comment from './Comment.vue';
         .then(() => this.$router.go())
         .catch(error => console.log(error))
       },
-      // likePost(){
-      //   let token = sessionStorage.getItem('token');
-      //   if (likes.likeType == 0 && likes.likeType !== -1 && !likes.postId && !likes.userId) {
-      //     likes.likeType = 1
-      //   }else{
-      //     likes.likeType = 0
-      //   }
-      //   const options = {
-      //     method: "POST",
-      //     headers: {
-      //       'Content-type' : 'application/json',
-      //       'Authorization' : 'Bearer ' + token
-      //     }
-      //   }
-      //   fetch('http://localhost:3000/api/likes/' + likes.id, options)
-      //   .then(res => res.json())
-      //   .then(data => this.posts = data)
-      //   .catch(error => console.log(error))
-      // }
+      likePost(){
+        let token = sessionStorage.getItem('token');
+        if (this.likes.likeType == 0) {
+          this.likes.likeType = 1
+        }else{
+          this.likes.likeType = 0
+        }
+        const options = {
+          method: "POST",
+          headers: {
+            'Content-type' : 'application/json',
+            'Authorization' : 'Bearer ' + token
+          }
+        }
+        fetch('http://localhost:3000/api/likes/' + this.post.id, options)
+        .then(res => res.json())
+        .then(data => this.posts = data)
+        .catch(error => console.log(error))
+      },
+      dislikePost(){
+        let token = sessionStorage.getItem('token');
+        if (this.likes.likeType == 0) {
+          this.likes.likeType = -1
+        }else{
+          this.likes.likeType = 0
+        }
+        const options = {
+          method: "POST",
+          headers: {
+            'Content-type' : 'application/json',
+            'Authorization' : 'Bearer ' + token
+          }
+        }
+        fetch('http://localhost:3000/api/likes/' + this.post.id, options)
+        .then(res => res.json())
+        .then(data => this.posts = data)
+        .catch(error => console.log(error))
+      }
       }
   };
 </script>

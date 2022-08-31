@@ -53,13 +53,15 @@ exports.modifyPost = (req, res, next) => {
     if (post.userId === req.token.userId || req.token.isAdmin){  
       let imageUrl = "";
        if (req.file){
-        imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-        post.set({
-          titre: req.body.titre,
-          text: req.body.text,
-          ...(imageUrl !== undefined && {imageUrl})
-          // imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: post.imageUrl,
-        });
+        const filename = post.imageUrl.split('/images/')[1]; 
+          imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+          post.set({
+            titre: req.body.titre,
+            text: req.body.text,
+            ...(imageUrl !== undefined && {imageUrl})
+            // imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: post.imageUrl,
+          });
+          fs.unlink(`images/${filename}`, (error) => { if (error) console.log(error); });
        }else{
           post.set({
             titre: req.body.titre,
@@ -125,20 +127,23 @@ exports.getAllPosts = (req, res, next) => {
 exports.likesDislikes = (req, res, next) => {
   Like.findOne({where: { postId: req.params.id, userId: req.token.userId }})
   .then((like) => {
-    switch (likeType) {
+    console.log(like);
+    console.log(typeof(req.body.likeType));
+    switch (req.body.likeType) {
       case 0:
         if (like){
-          like.destroy
+          like.destroy()
           .then(() => res.status(201).json({ message: 'like or dislike canceled !'}))
           .catch(error => res.status(400).json({ error }));
         }else{
-          res.send({message: "Already canceled"})
+          res.status(400).json({message: "Already canceled"})
         }
         break;
         
       case -1:
       case 1:
         if (!like) {
+          console.log(req.body.likeType);
           Like.create({
             likeType: req.body.likeType,
             userId: req.token.userId,
@@ -147,24 +152,26 @@ exports.likesDislikes = (req, res, next) => {
           .then(() => res.status(201).json({ message: 'post liked or disliked !'}))
           .catch(error => res.status(400).json({ error }));
         }else{
-          res.send({message: "Already liked or disliked"})
+          res.status(400).json({message: "Already liked or disliked"})
         }
         break;
 
       default:
         break;        
     }
-    Like.update({where: { postId: req.params.id, userId: req.token.userId }})
-    .then(() => res.status(200).json({ message: 'post évaluée !' }))
-    .catch(error => res.status(400).json({ error }))
+    // Like.update({where: { postId: req.params.id, userId: req.token.userId }})
+    // .then(() => res.status(200).json({ message: 'post évaluée !' }))
+    // .catch(error => res.status(400).json({ error }))
   })
   .catch((error) => res.status(400).json({ error }));
 };
 
 exports.getLikesDislikes = async (req, res, next) => {
   try {
-    const likesCount = await Like.count({where: likeType = "1" , postId: Like.postId})
-    const dislikesCount = await Like.count({where: dislikeType = "-1" , postId: Like.postId})
+    console.log('toto');
+    const likesCount = await Like.count({where: {likeType : 1 , postId: req.params.postId}})
+    // const dislikesCount = await Like.count({where: dislikeType = "-1" , postId: Like.postId})
+    const dislikeCount = 0;
     res.status(200).json({ likesCount, dislikesCount })
   } catch (error) {res.status(500).json({ error })
   }

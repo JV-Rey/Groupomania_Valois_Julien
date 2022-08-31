@@ -4,7 +4,7 @@ const auth = require('../middleware/auth');
 
 const postCtrl = require('../controllers/post');
 
-router.get("/:id", auth, postCtrl.getLikesDislikes);
-router.put("/:id", auth, postCtrl.likesDislikes);
+router.get("/:postId", auth, postCtrl.getLikesDislikes);
+router.post("/:id", auth, postCtrl.likesDislikes);
 
 module.exports = router;
