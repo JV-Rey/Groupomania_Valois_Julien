@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="marginBottom">
         <div class="comment">
             <p>{{comment.user.firstName + ' ' + comment.user.lastName}}</p>
             <p>Créé le {{comment.createdAt}}</p>
@@ -8,10 +8,10 @@
         </div>
         <div>
             <button class="margin" v-if="comment.userId === userInfo.userId || userInfo.isAdmin" @click='toggle = !toggle'>Modifier ce commentaire</button>
-                <form @submit.prevent="modifyComment()" v-show='toggle'  alt="formulaire de création de post">
+                <form class="flex" @submit.prevent="modifyComment()" v-show='toggle'  alt="formulaire de création de post">
                     <label for="text">Text :</label>
-                    <textarea class="marginTop" id="text" name="text" rows="4" cols="50" v-model="modifComment.text" alt="renseigner le text de votre post"></textarea> 
-                    <button class="margin">finalisé votre post</button>
+                    <textarea class="margin" id="text" name="text" rows="4" cols="50" v-model="modifComment.text" alt="renseigner le text de votre post"></textarea> 
+                    <button class="margin">Modifier</button>
                 </form>
             <button @click="deleteComment()" v-if="comment.userId === userInfo.userId || userInfo.isAdmin">Supprimer ce commentaire</button>
         </div>
@@ -50,6 +50,7 @@
                 fetch('http://localhost:3000/api/comment/' + this.comment.id, options)
                 .then(res => res.json())
                 .then(data => this.comments = data)
+                .then(() => this.$router.go())
                 .catch(error => console.log(error))
             },
             deleteComment(){
@@ -62,6 +63,7 @@
                 }
                 }
                 fetch('http://localhost:3000/api/comment/' + this.comment.id, options)
+                .then(() => this.$router.go())
                 .catch(error => console.log(error))
             }
         },
@@ -76,15 +78,24 @@
         box-shadow: 20px 5px 20px #4E5166;
     }
 
+    .flex {
+      display: flex;
+      flex-direction: column;
+    }
+
     .margin{
         margin: 20px auto;
     }
 
     .marginTop{
-        margin-top: 10px auto;
+        margin-top: 10px;
     }
 
     .textComment{
         font-weight: bold;
+    }
+
+    .marginBottom{
+        margin-bottom: 20px;
     }
 </style>
