@@ -52,22 +52,22 @@ exports.modifyPost = (req, res, next) => {
   .then(post => {
     if (post.userId === req.token.userId || req.token.isAdmin){  
       let imageUrl = "";
-       if (req.file){
+      if (req.file){
         const filename = post.imageUrl.split('/images/')[1]; 
-          imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-          post.set({
-            titre: req.body.titre,
-            text: req.body.text,
-            ...(imageUrl !== undefined && {imageUrl})
-            // imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: post.imageUrl,
-          });
-          fs.unlink(`images/${filename}`, (error) => { if (error) console.log(error); });
-       }else{
-          post.set({
-            titre: req.body.titre,
-            text: req.body.text
-          }) 
-        }
+        imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        post.set({
+          titre: req.body.titre,
+          text: req.body.text,
+          ...(imageUrl !== undefined && {imageUrl})
+          // imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: post.imageUrl,
+        });
+        fs.unlink(`images/${filename}`, (error) => { if (error) console.log(error); });
+      }else{
+        post.set({
+          titre: req.body.titre,
+          text: req.body.text
+        }) 
+      }
       post.save()
       .then(() => res.status(200).json({ message: 'post modifiée !'}))
       .catch(error => res.status(400).json({ error }));
@@ -170,8 +170,7 @@ exports.getLikesDislikes = async (req, res, next) => {
   try {
     console.log('toto');
     const likesCount = await Like.count({where: {likeType : 1 , postId: req.params.postId}})
-    // const dislikesCount = await Like.count({where: dislikeType = "-1" , postId: Like.postId})
-    const dislikeCount = 0;
+    const dislikesCount = await Like.count({where: {likeType : -1 , postId: req.params.postId}})
     res.status(200).json({ likesCount, dislikesCount })
   } catch (error) {res.status(500).json({ error })
   }

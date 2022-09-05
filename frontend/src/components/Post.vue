@@ -8,8 +8,8 @@
         <h2 class="margin">{{post.titre}}</h2>
         <p class="margin">{{post.text}}</p>
         <img class="post-image" :src="post.imageUrl">
-        <button @click="likePost()">J'aime({{likes.likeCount}})</button>
-        <button @click="dislikePost()">Je n'aime pas({{likes.dislikeCount}})</button>
+        <button @click="likePost()">J'aime({{likes.likesCount}})</button>
+        <button @click="dislikePost()">Je n'aime pas({{likes.dislikesCount}})</button>
         <button v-if="post.userId === userInfo.userId || userInfo.isAdmin" @click='toggle = !toggle'>Modifier votre post?</button>
           <form class="flex" @submit.prevent="modifyPost()" v-show='toggle'  alt="formulaire de création de post">
             <label for="titre" class="margin">Titre :</label>      
@@ -54,6 +54,9 @@ import Comment from './Comment.vue';
       }
     },
     components: { Comment },
+    created(){
+      this.getLikesDislikes();
+    },
      methods: {
       modifyPost(){
         let token = sessionStorage.getItem('token');
@@ -89,13 +92,29 @@ import Comment from './Comment.vue';
         .then(() => this.$router.go())
         .catch(error => console.log(error))
       },
-      likePost(){
+      getLikesDislikes(){
         let token = sessionStorage.getItem('token');
-        if (this.likes.likeType == 0) {
-          this.likes.likeType = 1
-        }else{
-          this.likes.likeType = 0
+        const options = {
+          method: "GET",
+          headers: {
+            'Content-type' : 'application/json',
+            'Authorization' : 'Bearer ' + token
+          }
         }
+        fetch('http://localhost:3000/api/likes/' + this.post.id, options)
+        .then(res => res.json())
+        .then(data => this.likes = data)
+        .catch(error => console.log(error))
+      },
+      likePost(){
+        let token = sessionStorage.getItem('token'); 
+        console.log(this.likes.likeType);       
+        if (this.likes.likeType == 0) {          
+          this.likes.likeType = parseInt('1');  
+        }else{
+          this.likes.likeType = parseInt('0');  
+        }
+        console.log(this.likes.likeType);
         const options = {
           method: "POST",
           headers: {
@@ -127,7 +146,7 @@ import Comment from './Comment.vue';
         .then(data => this.posts = data)
         .catch(error => console.log(error))
       }
-      }
+    },
   };
 </script>
 
