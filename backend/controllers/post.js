@@ -130,15 +130,15 @@ exports.likesDislikes = (req, res, next) => {
     console.log(like);
     console.log(typeof(req.body.likeType));
     switch (req.body.likeType) {
-      case 0:
-        if (like){
-          like.destroy()
-          .then(() => res.status(201).json({ message: 'like or dislike canceled !'}))
-          .catch(error => res.status(400).json({ error }));
-        }else{
-          res.status(400).json({message: "Already canceled"})
-        }
-        break;
+      // case 0:
+      //   if (like){
+      //     like.destroy()
+      //     .then(() => res.status(201).json({ message: 'like or dislike canceled !'}))
+      //     .catch(error => res.status(400).json({ error }));
+      //   }else{
+      //     res.status(400).json({message: "Already canceled"})
+      //   }
+      //   break;
         
       case -1:
       case 1:
@@ -152,26 +152,27 @@ exports.likesDislikes = (req, res, next) => {
           .then(() => res.status(201).json({ message: 'post liked or disliked !'}))
           .catch(error => res.status(400).json({ error }));
         }else{
-          res.status(400).json({message: "Already liked or disliked"})
+          // res.status(400).json({message: "Already liked or disliked"})
+          like.destroy()
+          .then(() => res.status(201).json({ message: 'like or dislike canceled !'}))
+          .catch(error => res.status(400).json({ error }));
         }
         break;
 
       default:
         break;        
     }
-    // Like.update({where: { postId: req.params.id, userId: req.token.userId }})
-    // .then(() => res.status(200).json({ message: 'post évaluée !' }))
-    // .catch(error => res.status(400).json({ error }))
   })
   .catch((error) => res.status(400).json({ error }));
 };
 
 exports.getLikesDislikes = async (req, res, next) => {
   try {
-    console.log('toto');
     const likesCount = await Like.count({where: {likeType : 1 , postId: req.params.postId}})
     const dislikesCount = await Like.count({where: {likeType : -1 , postId: req.params.postId}})
-    res.status(200).json({ likesCount, dislikesCount })
+    const alreadyLiked = await Like.findAll({where: {likeType : -1 , postId: req.params.postId }})
+    const alreadyLiked2 = await Like.findAll({where: {likeType : 1 , postId: req.params.postId }})
+    res.status(200).json({ likesCount, dislikesCount, alreadyLiked, alreadyLiked2 })
   } catch (error) {res.status(500).json({ error })
   }
 };

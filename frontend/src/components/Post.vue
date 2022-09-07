@@ -50,7 +50,7 @@ import Comment from './Comment.vue';
           titre: this.post.titre,
           text: this.post.text,
         },
-        likes: []
+        likes: ( {likesCount: 0, dislikesCount: 1, alreadyLiked: true, id:""} ) 
       }
     },
     components: { Comment },
@@ -107,14 +107,12 @@ import Comment from './Comment.vue';
         .catch(error => console.log(error))
       },
       likePost(){
-        let token = sessionStorage.getItem('token'); 
-        console.log(this.likes.likeType);       
-        if (this.likes.likeType == 0) {          
-          this.likes.likeType = parseInt('1');  
+        let token = sessionStorage.getItem('token');        
+        if (this.likes.alreadyLiked === true) {          
+          this.likes.likeType = parseInt(0);  
         }else{
-          this.likes.likeType = parseInt('0');  
+          this.likes.likeType = parseInt(1);  
         }
-        console.log(this.likes.likeType);
         const options = {
           method: "POST",
           headers: {
@@ -129,10 +127,10 @@ import Comment from './Comment.vue';
       },
       dislikePost(){
         let token = sessionStorage.getItem('token');
-        if (this.likes.likeType == 0) {
-          this.likes.likeType = -1
+        if (this.likes.alreadyLiked == true) {          
+          this.likes.likeType = 0;  
         }else{
-          this.likes.likeType = 0
+          this.likes.likeType = -1;  
         }
         const options = {
           method: "POST",
