@@ -4,7 +4,7 @@
       <div class="post flex">
         <p>{{post.user.firstName + ' ' + post.user.lastName}}</p>
         <p>Créé le {{post.createdAt}}</p>
-        <p>modifié le {{post.uptatedAt}}</p>
+        <p>modifié le {{post.updatedAt}}</p>
         <h2 class="margin">{{post.titre}}</h2>
         <p class="margin">{{post.text}}</p>
         <img class="post-image" :src="post.imageUrl">
@@ -50,7 +50,7 @@ import Comment from './Comment.vue';
           titre: this.post.titre,
           text: this.post.text,
         },
-        likes: ( {likesCount: 0, dislikesCount: 1, alreadyLiked: true, id:""} ) 
+        likes: {} 
       }
     },
     components: { Comment },
@@ -107,42 +107,44 @@ import Comment from './Comment.vue';
         .catch(error => console.log(error))
       },
       likePost(){
-        let token = sessionStorage.getItem('token');        
-        if (this.likes.alreadyLiked === true) {          
-          this.likes.likeType = parseInt(0);  
-        }else{
-          this.likes.likeType = parseInt(1);  
-        }
-        const options = {
-          method: "POST",
-          headers: {
-            'Content-type' : 'application/json',
-            'Authorization' : 'Bearer ' + token
+        if (!this.likes.alreadyDisliked) {                   
+          let token = sessionStorage.getItem('token');        
+          let likeType = 1;          
+          if (this.likes.alreadyLiked){
+            likeType = 0;
+          }          
+          const options = {
+            method: "POST",
+            headers: {
+              'Content-type' : 'application/json',
+              'Authorization' : 'Bearer ' + token
+            },
+            body: JSON.stringify({likeType: likeType})
           }
+          fetch('http://localhost:3000/api/likes/' + this.post.id, options)
+          .then(() =>  this.getLikesDislikes())
+          .catch(error => console.log(error))
         }
-        fetch('http://localhost:3000/api/likes/' + this.post.id, options)
-        .then(res => res.json())
-        .then(data => this.posts = data)
-        .catch(error => console.log(error))
       },
       dislikePost(){
-        let token = sessionStorage.getItem('token');
-        if (this.likes.alreadyLiked == true) {          
-          this.likes.likeType = 0;  
-        }else{
-          this.likes.likeType = -1;  
-        }
-        const options = {
-          method: "POST",
-          headers: {
-            'Content-type' : 'application/json',
-            'Authorization' : 'Bearer ' + token
+        if (!this.likes.alreadyLiked) { 
+          let token = sessionStorage.getItem('token');
+          let likeType = -1;
+          if (this.likes.alreadyDisliked) {          
+            likeType = 0;  
           }
+          const options = {
+            method: "POST",
+            headers: {
+              'Content-type' : 'application/json',
+              'Authorization' : 'Bearer ' + token
+            },
+            body: JSON.stringify({likeType: likeType})
+          }
+          fetch('http://localhost:3000/api/likes/' + this.post.id, options)
+          .then(() =>  this.getLikesDislikes())
+          .catch(error => console.log(error))
         }
-        fetch('http://localhost:3000/api/likes/' + this.post.id, options)
-        .then(res => res.json())
-        .then(data => this.posts = data)
-        .catch(error => console.log(error))
       }
     },
   };

@@ -3,7 +3,7 @@
         <div class="comment">
             <p>{{comment.user.firstName + ' ' + comment.user.lastName}}</p>
             <p>Créé le {{comment.createdAt}}</p>
-            <p>modifié le {{comment.uptatedAt}}</p>
+            <p>modifié le {{comment.updatedAt}}</p>
             <p class="margin textComment">{{comment.text}}</p>
         </div>
         <div>
