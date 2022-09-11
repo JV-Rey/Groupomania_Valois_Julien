@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 /*let passwordValidator = require('password-validator');*/
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 const User = require('../models/User');
 
 /** Utilisation de passwordValidator pour
@@ -104,16 +105,34 @@ exports.getOneUser = (req, res, next) => {
 exports.modifyUser = (req, res, next) => { 
   User.findByPk( req.params.id )
     .then((user) => {
-      if (user.id === req.token.userId){
-        //const salt = bcrypt.genSaltSync(10);
-        //const hash = bcrypt.hashSync(req.body.password, salt);    
-        user.update({
-          email: req.body.email,
-          //password: hash,
-          imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/profile/${req.file.filename}`: user.imageUrl, 
-        })
-        .then(() => res.status(200).json({ message: 'Information(s) de votre compte modifiée(s) !'}))
-        .catch(error => res.status(400).json({ error }));        
+      if (user.id === req.token.userId){ 
+        let imageUrl = "";
+        if (req.file){
+          if (user.imageUrl === "/images/profile/avatardefault_92824.png"){
+            console.log(user.imageUrl);
+            user.update({
+              firstName: req.body.firstName,
+              lastName: req.body.lastName,
+              imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+            });
+          }else{
+            console.log(user.imageUrl);
+            const filename = user.imageUrl.split('/images/')[1]; 
+            imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+            user.update({
+              firstName: req.body.firstName,
+              lastName: req.body.lastName
+            });
+            fs.unlink(`images/${filename}`, (error) => { if (error) console.log(error); });
+          }
+        }else{
+          user.update({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName
+          }) 
+          .then(() => res.status(200).json({ message: 'Information(s) de votre compte modifiée(s) !'}))
+          .catch(error => res.status(400).json({ error }));  
+        }
       }else{
         res.status(403).json({ message: 'unauthorized request' });
       };    

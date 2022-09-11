@@ -2,14 +2,14 @@
     <Header></Header>
     <div class="user">
         <h2>Profile de {{actualUser.firstName + ' ' + actualUser.lastName}}</h2>  
-        <img :src="actualUser.imageUrl" alt="Votre image de profile">  
+        <img :src="actualUser.imageUrl" alt="Votre image de profile">
+        <p>Votre adresse mail est {{actualUser.email}}</p>
+        <form @submit.prevent="modifProfile()" class="flex" alt="formulaire de modification de profile">
+            <label for="firstName">Voulez-vous changer votre prénom?</label>      
+            <input type="text" name="firstName" id="firstName" v-model="actualUser.firstName" placeholder="ex : Jean" alt="renseigner votre prénom">
 
-        <form @submit.prevent="modifProfile()" class="flex" alt="formulaire de modifacation de profile">
-            <label for="email">Votre email est <span>{{actualUser.email}}</span>, voulez-vous la changer?</label>
-            <input type="text" name="email" id="email" v-model="email" placeholder="ex : dupont@groupomania.fr" alt="renseigner votre nouvel email">
-            
-            <label for="password">Voulez-vous changer votre mot de passe?</label>
-            <input type="password" name="password" id="password" v-model="password" placeholder="ex : dupontpass!" alt="renseigner votre nouveau mot de passe">
+            <label for="lastName">Voulez-vous changer votre nom?</label>
+            <input type="text" name="lastName" id="lastName" v-model="actualUser.lastName"  placeholder="ex : Dupont" alt="renseigner votre nom">
             
             <label for="image">Voulez vous changer votre image de profile? :</label>
             <input type="file" ref="inputImg" name="image" id="image" accept="image/*" alt="changer votre image de profile">
@@ -37,7 +37,6 @@
                     firstName:'',
                     lastName:'',
                     email:'',
-                    password:'',
                     imageUrl:''
                 }, 
                 userInfo: JSON.parse(sessionStorage.getItem('userInfo')),
@@ -85,8 +84,8 @@
                 let id = this.$route.params.id                
                 let input = this.$refs.inputImg;
                 let formData = new FormData();
-                formData.append('email', this.email)
-                formData.append('password', this.password)
+                formData.append('firstName', this.actualUser.firstName)
+                formData.append('lastName', this.actualUser.lastName)
                 formData.append('image', input.files[0])
                 const options = {
                     method: "PUT",
