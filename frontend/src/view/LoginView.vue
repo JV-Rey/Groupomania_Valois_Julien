@@ -93,4 +93,15 @@
       color: #FD2D01;
       font-weight: bold;
     }
+
+    @media only screen and (max-width: 540px) {
+      .form-group {
+        flex-direction: column;
+        padding: 1.5rem;
+      }
+
+      p{
+        margin: 10px;
+      }
+    }
 </style>

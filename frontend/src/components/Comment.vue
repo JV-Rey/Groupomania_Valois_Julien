@@ -8,9 +8,9 @@
         </div>
         <div>
             <button class="margin" v-if="comment.userId === userInfo.userId || userInfo.isAdmin" @click='toggle = !toggle'>Modifier ce commentaire</button>
-                <form class="flex" @submit.prevent="modifyComment()" v-show='toggle'  alt="formulaire de création de post">
+                <form class="flex" @submit.prevent="modifyComment()" v-show='toggle'  alt="formulaire de création de commentaire">
                     <label for="text">Text :</label>
-                    <textarea class="margin" id="text" name="text" rows="4" cols="50" v-model="modifComment.text" alt="renseigner le text de votre post"></textarea> 
+                    <textarea class="margin" id="text" name="text" rows="4" cols="50" v-model="modifComment.text" alt="renseigner le text de votre commentaire"></textarea> 
                     <button class="margin">Modifier</button>
                 </form>
             <button @click="deleteComment()" v-if="comment.userId === userInfo.userId || userInfo.isAdmin">Supprimer ce commentaire</button>
@@ -97,5 +97,13 @@
 
     .marginBottom{
         margin-bottom: 20px;
+    }
+
+    @media only screen and (max-width: 740px) {
+        .comment{
+            border: 2px solid #FD2D01;
+            border-radius: 20px;
+            box-shadow: 20px 5px 20px #4E5166;
+        }
     }
 </style>

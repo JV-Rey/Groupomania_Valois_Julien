@@ -1,7 +1,7 @@
 <template>
   <img src="../assets/icon-left-font.svg" alt="Logo Groupomania">
   <div class="border">
-    <h3>Remplicez ces informations pour vous inscrire à Groupomania.</h3>
+    <h3>Compléter ces informations pour vous inscrire à Groupomania.</h3>
     <form @submit.prevent="signUp" alt="formulaire d'inscription à Groupomania">
         <div class="form-group">
           <label for="firstName">Votre prénom :</label>      
@@ -15,7 +15,7 @@
 
         <div class="form-group">
           <label for="email">Votre adresse mail :</label>
-          <input type="text" id="email" v-model="user.email" placeholder="ex : dupont@groupomania.fr" alt="renseigner votre email">
+          <input type="text" id="email" v-model="user.email" pattern="[a-zA-Z0-9_\.\+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-\.]+" placeholder="ex : dupont@groupomania.fr" alt="renseigner votre email">
         </div>
 
       <div class="form-group">
@@ -53,9 +53,9 @@
         fetch("http://localhost:3000/api/auth/signup", options)
         .then(res => res.json())
         this.$router.push("/login")
-        .catch(error => console.log(error))
-      }
-    },
+        .catch(error => console.log(error))        
+      },
+    }
   }
 </script>
 
@@ -93,5 +93,16 @@
   a{
     color: #FD2D01;
     font-weight: bold;
+  }
+
+  @media only screen and (max-width: 540px) {
+    .form-group {
+      flex-direction: column;
+      padding: 1.5rem;
+    }
+
+    p{
+      margin: 10px;
+    }
   }
 </style>

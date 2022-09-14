@@ -33,3 +33,13 @@
     },
 };
 </script>
+
+<style scoped>
+    img{
+        max-width: 310px;
+
+    }
+    div{
+        margin: 20px 0px;
+    }
+</style>

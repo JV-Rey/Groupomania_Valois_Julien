@@ -1,15 +1,15 @@
 <template>
   <Header></Header>
   <div class="color">
-    <h3>Vous pouvez créé et publié un post.</h3>
+    <h3>Vous pouvez créer et publier un post.</h3>
     <form @submit.prevent="createPost()" class="flex" alt="formulaire de création de post">
       <label class="margin" for="titre">Titre :</label>      
       <input type="text" name="titre" class="form-control" id="titre" v-model="titre" placeholder="ex : Titre du post" alt="renseigner le titre de votre post">
           
-      <label class="margin" for="text">Text :</label>
-      <textarea id="text" name="text" rows="4" cols="50" v-model="text" placeholder="ex : Text de votre post" alt="renseigner le text de votre post"></textarea> 
+      <label class="margin" for="text">Texte :</label>
+      <textarea id="text" name="text" rows="4" cols="50" v-model="text" placeholder="ex : Text de votre post" alt="renseigner le texte de votre post"></textarea> 
           
-      <label class="margin" for="image">Image(optionel) :</label>
+      <label class="margin" for="image">Image(optionnelle) :</label>
       <input class="center" type="file" name="image" id="image" accept="image/*" alt="ajouter une image">
       <button class="margin">Créer un post</button>
     </form>
@@ -80,5 +80,11 @@
       border: 10px solid #FD2D01;
       border-radius: 20px;
       box-shadow: 20px 5px 20px #4E5166;
+    }
+
+    @media only screen and (max-width: 740px) {
+      form{
+        width: 75%;
+      }
     }
 </style>

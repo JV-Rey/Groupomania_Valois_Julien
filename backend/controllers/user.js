@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-/*let passwordValidator = require('password-validator');*/
+let passwordValidator = require('password-validator');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
@@ -7,7 +7,7 @@ const User = require('../models/User');
 
 /** Utilisation de passwordValidator pour
  *  forcer les utilisateurs à avoir un mdp à sécurité importante */
-/*let schema = new passwordValidator();
+let schema = new passwordValidator();
 
 schema
 .is().min(8)                                    // Minimum length 8
@@ -17,16 +17,11 @@ schema
 .has().digits(2)                                // Must have at least 2 digits
 .has().not().spaces()                           // Should not have spaces
 .is().not().oneOf(['Passw0rd', 'Password123']); // Blacklist these values
-*/
-/** 
- * Inscription utilisateur
- * Hachage du mot de passe de l'utilisateur
- * ajout de l'utilisateur à la base de données
- */
+
 exports.signup = (req, res, next) => {
-  /*if (!schema.validate(req.body.password)) {
+  if (!schema.validate(req.body.password)) {
     return res.status(400).json({error: "schema mot de passe non valide"})
-  }*/
+  }
   bcrypt.hash(req.body.password, 10)
   .then(hash => {
     const user = new User({
@@ -47,7 +42,8 @@ exports.signup = (req, res, next) => {
  * Connexion utilisateur
  * Vérifie si l'email éxiste dans la base de données
  * Compare le mdp entré avec celui de la base de données
- * renvoie l'id de l'utilisateur depuis la base de données et un token web JSON signé
+ * renvoie l'id de l'utilisateur depuis la base de données 
+ * un token web JSON signé et si l'utilisateur est un adminatreur ou non
  */
 exports.login = (req, res, next) => {
   User.findOne({ where: {email: req.body.email }})
@@ -55,8 +51,6 @@ exports.login = (req, res, next) => {
       if (!user) {
         return res.status(401).json({ error: 'Utilisateur non trouvé !' });
       }
-      console.log(req.body);
-      console.log(user);
       bcrypt.compare(req.body.password, user.password)
         .then(valid => {
           if (!valid) {
@@ -91,8 +85,7 @@ exports.deleteUser = (req, res, next) => {
 
 exports.getOneUser = (req, res, next) => {
   User.findByPk( req.params.id )
-    .then((user) => {
-      
+    .then((user) => {      
       res.status(200).json(user);
     })
     .catch((error) => {
@@ -106,31 +99,34 @@ exports.modifyUser = (req, res, next) => {
   User.findByPk( req.params.id )
     .then((user) => {
       if (user.id === req.token.userId){ 
-        let imageUrl = "";
         if (req.file){
-          if (user.imageUrl === "/images/profile/avatardefault_92824.png"){
-            console.log(user.imageUrl);
+          if (user.imageUrl === `${req.protocol}://${req.get('host')}/images/profile/avatardefault_92824.png`){
             user.update({
               firstName: req.body.firstName,
               lastName: req.body.lastName,
               imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-            });
+            })
+            .then(() => res.status(204).json({ message: 'Information(s) de votre compte modifiée(s) !'}))
+            .catch(error => res.status(400).json({ error }));  
           }else{
-            console.log(user.imageUrl);
             const filename = user.imageUrl.split('/images/')[1]; 
-            imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
             user.update({
               firstName: req.body.firstName,
-              lastName: req.body.lastName
-            });
-            fs.unlink(`images/${filename}`, (error) => { if (error) console.log(error); });
+              lastName: req.body.lastName,
+              imageUrl : `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+            })
+            .then(() => {
+              fs.unlink(`images/${filename}`, (error) => { if (error) console.log(error); });
+              res.status(204).json({ message: 'Information(s) de votre compte modifiée(s) !'})
+            })
+            .catch(error => res.status(400).json({ error }));              
           }
         }else{
           user.update({
             firstName: req.body.firstName,
             lastName: req.body.lastName
           }) 
-          .then(() => res.status(200).json({ message: 'Information(s) de votre compte modifiée(s) !'}))
+          .then(() => res.status(204).json({ message: 'Information(s) de votre compte modifiée(s) !'}))
           .catch(error => res.status(400).json({ error }));  
         }
       }else{

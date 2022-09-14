@@ -8,8 +8,8 @@
         <h2 class="margin">{{post.titre}}</h2>
         <p class="margin">{{post.text}}</p>
         <img class="post-image" :src="post.imageUrl">
-        <button @click="likePost()">J'aime({{likes.likesCount}})</button>
-        <button @click="dislikePost()">Je n'aime pas({{likes.dislikesCount}})</button>
+        <button @click="likePost()"><font-awesome-icon class="thumbUp" icon="fa-solid fa-thumbs-up" />({{likes.likesCount}})</button>
+        <button @click="dislikePost()"><font-awesome-icon class="thumbDown" icon="fa-solid fa-thumbs-down" />({{likes.dislikesCount}})</button>
         <button v-if="post.userId === userInfo.userId || userInfo.isAdmin" @click='toggle = !toggle'>Modifier votre post?</button>
           <form class="flex" @submit.prevent="modifyPost()" v-show='toggle'  alt="formulaire de création de post">
             <label for="titre" class="margin">Titre :</label>      
@@ -25,7 +25,7 @@
         <button v-if="post.userId === userInfo.userId || userInfo.isAdmin" @click="deletePost()">Supprimer ce post</button>
       </div>
       <div class="margin">
-        <router-link :to="'/newComment/' + post.id" class="font">Ajoutez un commentaire</router-link>
+        <router-link :to="'/newComment/' + post.id" class="font">Ajouter un commentaire</router-link>
       </div>
         <Comment v-for="comment in post.comments" :key="comment.id" :comment="comment"></Comment>
     </article>
@@ -34,6 +34,7 @@
 
 <script>
 import Comment from './Comment.vue';
+
   export default{
     name: "PostComp",
     props: {
@@ -196,5 +197,33 @@ import Comment from './Comment.vue';
       font-size: larger;
       font-weight: bolder;
       color: #FD2D01;
+    }
+
+    .thumbUp{
+      color: green;
+    }
+
+    .thumbDown{
+      color: red;
+    }
+
+    @media only screen and (max-width: 740px) {
+      .post-image{
+        width: 300px;
+      }
+      .article{
+        padding: 0%;        
+      }
+
+      .post{
+        background-color: #FFD7D7;
+        border: none;
+        border-radius: 0px;
+        box-shadow: none;      
+      }
+
+      form {
+        width: 90%;
+    }
     }
 </style>

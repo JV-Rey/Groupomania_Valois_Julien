@@ -1,10 +1,10 @@
 <template>
   <Header></Header>
   <div class="color">
-    <h3>Vous pouvez publié un commentaire.</h3>
+    <h3>Vous pouvez publier un commentaire.</h3>
     <form class="flex" @submit.prevent="createComment" alt="formulaire de création de commentaire">
         <label for="text">Text :</label>
-        <textarea class="margin" id="text" name="Comment" rows="4" cols="50" v-model="comment.text" placeholder="ex : Text de votre commentaire" alt="renseigner le text de votre commentaire"></textarea>
+        <textarea class="margin" id="text" name="Comment" rows="4" cols="50" v-model="comment.text" placeholder="ex : Texte de votre commentaire" alt="renseigner le texte de votre commentaire"></textarea>
     <button class="margin">Créer un commentaire</button>
   </form>
   </div>
@@ -68,4 +68,10 @@
     border-radius: 20px;
     box-shadow: 20px 5px 20px #4E5166;
   }
+
+    @media only screen and (max-width: 740px) {
+      textarea{
+        width: 75%;
+      }
+    }
 </style>

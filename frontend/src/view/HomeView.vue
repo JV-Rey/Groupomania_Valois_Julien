@@ -19,7 +19,7 @@
       }
     },
     created(){
-      this.getAllPosts();
+      sessionStorage.getItem('token') ? this.getAllPosts() : window.location.href = '/login';
     },
     methods: {
       getAllPosts(){

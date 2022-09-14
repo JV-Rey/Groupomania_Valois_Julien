@@ -4,13 +4,6 @@ const User = require('../models/User')
 const fs = require('fs');
 const Like = require('../models/postLikes')
 
-/** 
- * Capture et enregistre l'image
- * analyse le post transformée en chaîne de caractères 
- * et l'enregistre dans la base de données en définissant correctement son imageUrl 
- * Initialise les likes et dislikes de le post à 0 
- * et les usersLiked et usersDisliked avec des tableaux vides.
- */
 exports.createPost = (req, res, next) => {
   if ((req.file || req.body.text) && req.body.titre){
     const post = new Post({
@@ -25,7 +18,6 @@ exports.createPost = (req, res, next) => {
   }
 };
 
-/** Renvoie le post avec l’id fourni. */
 exports.getOnePost = (req, res, next) => {
   Post.findByPk(req.params.id, 
     {include: [
@@ -42,24 +34,16 @@ exports.getOnePost = (req, res, next) => {
   });
 };
 
-/** 
- * Met à jour le post avec l'id fourni.
- * Si une image est téléchargée, elle est capturée et l’imageUrl de le post est mise à jour.
- * Si aucun fichier n'est fourni, les informations sur le post se trouvent directement dans le corps de la requête
- * Si un fichier est fourni, le post transformée en chaîne de caractères se trouve dans req.body.post */
 exports.modifyPost = (req, res, next) => {
   Post.findByPk( req.params.id )
   .then(post => {
     if (post.userId === req.token.userId || req.token.isAdmin){  
-      let imageUrl = "";
       if (req.file){
         const filename = post.imageUrl.split('/images/')[1]; 
-        imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
         post.set({
           titre: req.body.titre,
           text: req.body.text,
-          ...(imageUrl !== undefined && {imageUrl})
-          // imageUrl: req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: post.imageUrl,
+          imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
         });
         fs.unlink(`images/${filename}`, (error) => { if (error) console.log(error); });
       }else{
@@ -75,7 +59,6 @@ exports.modifyPost = (req, res, next) => {
   })
 }
 
-/** Supprime le post avec l'id fourni. */
 exports.deletePost = (req, res, next) => {
   Post.findByPk( req.params.id )
   .then(post => {    
@@ -97,13 +80,11 @@ exports.deletePost = (req, res, next) => {
   .catch(error => res.status(500).json({ error }));
 };
 
-/** Renvoie un tableau de toutes les posts de la base de données. */
 exports.getAllPosts = (req, res, next) => {
   Post.findAll({
     include: [
       {model: User, attributes: ["firstName", "lastName"] },
       {model: Comment, include: [{model: User, attributes: ["firstName", "lastName"] }] },
-      {model: Like}
     ]
   })
   .then((posts) => {
@@ -116,14 +97,6 @@ exports.getAllPosts = (req, res, next) => {
   });
 };
 
-/**
- * Définit le statut « Like » pour l'userId fourni.
- * Si like = 1, l'utilisateur aime (= like) le post. 
- * Si like = 0, l'utilisateur annule son like ou son dislike.
- * Si like = -1, l'utilisateur n'aime pas (= dislike) le post.
- * L'ID de l'utilisateur doit être ajouté ou retiré du tableau approprié
- * Le nombre total de « Like » et de « Dislike » est mis à jour à chaque nouvelle notation
- */
 exports.likesDislikes = (req, res, next) => {
   Like.findOne({where: { postId: req.params.id, userId: req.token.userId }})
   .then((like) => {

@@ -1,7 +1,7 @@
 <template>
     <Header></Header>
     <div class="user">
-        <h2>Profile de {{actualUser.firstName + ' ' + actualUser.lastName}}</h2>  
+        <h2>Profil de {{actualUser.firstName + ' ' + actualUser.lastName}}</h2>  
         <img :src="actualUser.imageUrl" alt="Votre image de profile">
         <p>Votre adresse mail est {{actualUser.email}}</p>
         <form @submit.prevent="modifProfile()" class="flex" alt="formulaire de modification de profile">
@@ -11,9 +11,9 @@
             <label for="lastName">Voulez-vous changer votre nom?</label>
             <input type="text" name="lastName" id="lastName" v-model="actualUser.lastName"  placeholder="ex : Dupont" alt="renseigner votre nom">
             
-            <label for="image">Voulez vous changer votre image de profile? :</label>
-            <input type="file" ref="inputImg" name="image" id="image" accept="image/*" alt="changer votre image de profile">
-        <button>Modifier les informations de votre profile.</button>
+            <label for="image">Voulez vous changer votre image de profil? :</label>
+            <input type="file" ref="inputImg" name="image" id="image" accept="image/*" alt="changer votre image de profil">
+        <button>Modifier les informations de votre profil.</button>
         <button @click="deleteUser()">Supprimer votre compte.</button>   
         </form>
     </div>
@@ -96,8 +96,7 @@
                     }
                 }
                 fetch('http://localhost:3000/api/auth/user/' + id, options)
-                .then(res => res.json())
-                .then(data => this.user = data)
+                .then(() => this.$router.go())
                 .catch(error => console.log(error))
                 }, 
             deleteUser(){
@@ -119,7 +118,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     .user{
         background-color: #FFD7D7;
         border: 5px solid #FD2D01;
@@ -128,30 +127,41 @@
         margin-bottom: 40px;
         font-weight: bolder;
     }
+    
+    .flex{
+        display: flex;
+        flex-direction: column;
+    }
 
-  .flex{
-    display: flex;
-    flex-direction: column;
-  }
+    form{
+        width: 50%;
+        margin: 20px auto;
+    }
 
-  form{
-    width: 50%;
-    margin: 20px auto;
-  }
+    input{
+        margin: auto;
+    }
 
-  input{
-    margin: auto;
-  }
+    label{
+        margin: 20px;
+    }
 
-  label{
-    margin: 20px;
-  }
+    button{
+        margin: 20px auto;
+    }
 
-  button{
-    margin: 20px auto;
-  }
+    img{
+        max-width: 310px;
+        margin-top: 20px;
+    }
 
-  img{
-    max-width: 310px;
-  }
+    @media only screen and (max-width: 740px) {
+        form{
+            width: 90%;
+        }
+
+        label{
+            margin: 20px 0px;
+        }
+    }
 </style>

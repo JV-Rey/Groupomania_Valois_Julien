@@ -8,9 +8,7 @@ const commentCtrl = require('../controllers/comment');
 
 router.get('/', auth, commentCtrl.getAllComments);
 router.post('/', auth, multer, commentCtrl.createComment);
-router.get('/:id', auth, commentCtrl.getOneComment);
 router.put('/:id', auth, multer, commentCtrl.modifyComment);
 router.delete('/:id', auth, commentCtrl.deleteComment);
-//router.post("/:id/like", auth, commentCtrl.getLikesDislikes);
 
 module.exports = router;
