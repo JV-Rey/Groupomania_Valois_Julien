@@ -5,11 +5,12 @@
 </template>
 
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 
   #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
+    font-family: 'Lato', sans-serif;
     text-align: center;
-    
+    font-size: 17px;
   }
 
   html{
