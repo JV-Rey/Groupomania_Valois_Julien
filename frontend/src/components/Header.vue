@@ -46,7 +46,7 @@
 
     .nav{
         margin: 20px;
-        color: #FD2D01;
+        color: #FFD7D7;
     }
 
     .navMarginTop{

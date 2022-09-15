@@ -18,7 +18,7 @@
   }
 
   h1{
-        color: #FD2D01;
+        color: #FFD7D7;
         margin-top: 20px;
     }
   

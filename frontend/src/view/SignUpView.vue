@@ -65,7 +65,7 @@
   }
 
   h3{
-    color: #FD2D01;
+    color: #831701;
   }
 
   .form-group {
@@ -91,7 +91,7 @@
   }
 
   a{
-    color: #FD2D01;
+    color: #831701;
     font-weight: bold;
   }
 

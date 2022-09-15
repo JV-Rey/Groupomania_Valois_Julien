@@ -196,7 +196,7 @@ import Comment from './Comment.vue';
     .font{
       font-size: larger;
       font-weight: bolder;
-      color: #FD2D01;
+      color: #831701;
     }
 
     .thumbUp{
